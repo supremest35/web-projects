@@ -1,0 +1,16 @@
+package util;
+
+public class StringUtils {
+
+	public static int stringToInt(String value, int defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+}

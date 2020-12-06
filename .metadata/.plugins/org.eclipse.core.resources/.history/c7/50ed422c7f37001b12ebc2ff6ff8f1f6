@@ -1,0 +1,20 @@
+package noticeboard;
+
+public class BoardDao {
+
+	// 싱글턴 객체
+	private static BoardDao boardDao = new BoardDao();
+	private BoardDao() {}
+	public static BoardDao getInstance() {
+		return boardDao;
+	}
+	
+	public int getBoardNo() {
+		int boardNo = 0;
+		
+		
+		
+		return boardNo;
+		
+	}
+}

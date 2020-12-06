@@ -1,0 +1,7 @@
+INDEX VERSION 1.131
+C:\projects\my projects\web-projects\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3325653286.index
+\noticeboard\src
+C:\projects\my projects\web-projects\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\662688759.index
+\noticeboard\src
+C:\projects\my projects\web-projects\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2623961586.index
+\noticeboard\src
