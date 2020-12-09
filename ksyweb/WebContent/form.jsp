@@ -18,19 +18,35 @@
 			<%@ include file="common/navbar.jsp" %>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-12">
-			<div class="alert alert-danger">
-				<strong>오류</strong> 비밀번호가 일치하지 않습니다.
+	<%
+		String error = request.getParameter("error");
+	%>
+	<%
+		if ("pwd".equals(error)) {
+	%>
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					<strong>오류</strong> 비밀번호가 일치하지 않습니다.
+				</div>
 			</div>
 		</div>
-		<div class="col-12">
-			<div class="alert alert-danger">
-				<strong>오류</strong> 이미 사용중인 아이디입니다.
+	<%
+		}
+	%>
+	<%
+		if ("dupId".equals(error)) {
+	%>
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					<strong>오류</strong> 이미 사용중인 아이디입니다.
+				</div>
 			</div>
 		</div>
-	</div>
-	
+	<%
+		}
+	%>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
