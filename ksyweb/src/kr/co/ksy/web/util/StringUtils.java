@@ -2,6 +2,16 @@ package kr.co.ksy.web.util;
 
 public class StringUtils {
 	
+	public static String getStringForLength(String value, int maxLength) {
+		if (value == null) {
+			return "";
+		}
+		if (value.length() <= maxLength) {
+			return value;
+		}
+		return value.substring(0, maxLength) + "...";
+	}
+	
 	public static int stringToInt(String value, int defaultValue) {
 		if (value == null) {
 			return defaultValue;
