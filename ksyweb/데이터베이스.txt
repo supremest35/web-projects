@@ -1,0 +1,44 @@
+create table ksy_web_users (
+    user_id varchar2(100) not null constraint ksyweb_user_id_pk primary key,
+    user_password varchar2(64) not null,
+    user_name varchar2(200) not null,
+    user_tel varchar2(20) not null,
+    user_email varchar2(200) not null,
+    user_point number(6,0) default 0,
+    user_disabled char(1) default 'N',
+    user_created_date date default sysdate
+);
+
+create table ksy_web_board_categories (
+    category_no number(3) constraint ksyweb_category_no_pk primary key,
+    category_name varchar2(100) not null
+);
+
+create table ksy_web_board (
+    board_no number(7,0) constraint ksyweb_board_no_pk primary key,
+    board_category_no number(3) not null,
+    board_title varchar2(500) not null,
+    board_writer_id varchar2(100) not null,
+    board_content varchar2(4000) not null,
+    board_likes number(7,0) default 0,
+    board_deleted char(1) default 'N',
+    board_created_dated date default sysdate,
+    
+    constraint ksyboard_category_no_fk foreign key (board_category_no) references ksy_web_board_categories (category_no),
+    constraint ksy_board_writer_id_fk foreign key (board_writer_id) references ksy_web_users (user_id)
+);
+
+insert into ksy_web_board_categories values(101, '정치');
+insert into ksy_web_board_categories values(102, '경제');
+insert into ksy_web_board_categories values(103, '사회');
+insert into ksy_web_board_categories values(104, '금융');
+insert into ksy_web_board_categories values(105, '국제');
+insert into ksy_web_board_categories values(106, '문화');
+insert into ksy_web_board_categories values(107, 'IT');
+insert into ksy_web_board_categories values(108, '스포츠');
+insert into ksy_web_board_categories values(109, '연예');
+insert into ksy_web_board_categories values(110, '기타');
+
+commit;
+
+create sequence ksyweb_board_seq;
