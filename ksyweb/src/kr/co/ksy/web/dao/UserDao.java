@@ -10,7 +10,7 @@ import kr.co.ksy.web.vo.User;
 
 public class UserDao {
 	
-	private static final String GET_USER_BY_ID_SQL = "select * from ksy_web_users where user_id = ?";
+	private static final String GET_USER_BY_ID_SQL = "select * from ksy_web_users where user_id = ? and user_disabled = 'N'";
 	private static final String INSERT_USER_SQL = "insert into ksy_web_users (user_id, user_password, user_name, user_tel, user_email)"
 			+ " values(?, ?, ? ,? ,?)";
 	// 싱글턴 객체
