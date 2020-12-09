@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%--
+	board/form.jsp는 로그인된 사용자만 요청할 수 있는 jsp페이지다.
+ --%>
+<%@ include file="../common/loginCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>

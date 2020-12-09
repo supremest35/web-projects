@@ -44,6 +44,17 @@
 	<%
 		}
 	%>
+	<%
+		if ("required".equals(error)) {
+	%>
+		<div class="col-6 offset-3">
+			<div class="alert alert-danger">
+				<strong>오류</strong> 로그인이 필요한 사이트를 요청하여서 로그인페이지로 이동되었습니다.
+			</div>
+		</div>
+	<%
+		}
+	%>
 	<div class="row">
 		<div class="col-6 offset-3">
 			<div class="card">
