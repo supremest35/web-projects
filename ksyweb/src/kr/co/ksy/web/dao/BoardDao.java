@@ -9,6 +9,7 @@ import java.util.List;
 
 import kr.co.ksy.web.dto.BoardDto;
 import kr.co.ksy.web.util.ConnectionUtil;
+import kr.co.ksy.web.vo.Board;
 import kr.co.ksy.web.vo.Category;
 import kr.co.ksy.web.vo.User;
 
@@ -22,6 +23,8 @@ public class BoardDao {
 														   	     + " and b.category_no = c.board_category_no"
 														   	     + " and c.board_deleted = 'N')"
 														   	+ " where rn >= ? and rn <= ?";
+	private static final String INSERT_BOARD_SQL = "insert into ksy_web_board (board_no, board_category_no, board_title, board_writer_id, board_content)"
+												 + " values (ksyweb_board_seq.nextval, ?, ?, ?, ?)";
 	
 	// 싱글턴 객체
 	private static final BoardDao boardDao = new BoardDao();
@@ -79,5 +82,18 @@ public class BoardDao {
 		pstmt.close();
 		con.close();
 		return boardDtos;
+	}
+	
+	public void insertBoard(Board board) throws SQLException {
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(INSERT_BOARD_SQL);
+		pstmt.setInt(1, board.getCategoryNo());
+		pstmt.setString(2, board.getTitle());
+		pstmt.setString(3, board.getWriterId());
+		pstmt.setString(4, board.getContent());
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		con.close();
 	}
 }

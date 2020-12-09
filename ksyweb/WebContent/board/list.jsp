@@ -78,7 +78,7 @@
 							<tr>
 								<td><%=boardDto.getNo() %></td>
 								<td><%=boardDto.getCategory().getName() %></td>
-								<td><%=StringUtils.getStringForLength(boardDto.getTitle(), 33) %></td>
+								<td><a href="/ksyweb/detail.jsp?bno=<%=boardDto.getNo() %>"><%=StringUtils.getStringForLength(boardDto.getTitle(), 28) %></a></td>
 								<td><%=boardDto.getUser().getName() %></td>
 								<td><%=boardDto.getLikes() %></td>
 								<td><%=boardDto.getCreatedDate() %></td>

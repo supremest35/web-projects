@@ -1,3 +1,6 @@
+<%@page import="kr.co.ksy.web.vo.Category"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.ksy.web.dao.CategoryDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%--
@@ -22,6 +25,10 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		CategoryDao categoryDao = CategoryDao.getInstance();
+		List<Category> categories = categoryDao.getAllCategories();
+	%>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -33,13 +40,13 @@
 							<div class="col-10">
 								<select class="form-control" name="category">
 									<option value="" selected disabled> 카테고리를 선택하세요</option>
-									<option value="1"> 정치</option>
-									<option value="2"> 경제</option>
-									<option value="3"> 사회</option>
-									<option value="4"> 스포츠</option>
-									<option value="5"> 연예</option>
-									<option value="6"> IT</option>
-									<option value="7"> 기타</option>
+									<%
+										for (Category category : categories) {
+									%>
+										<option value="<%=category.getNo() %>"> <%=category.getName() %></option>
+									<%
+										}
+									%>
 								</select>
 							</div>
 						</div>
