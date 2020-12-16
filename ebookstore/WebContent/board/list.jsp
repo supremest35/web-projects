@@ -1,3 +1,7 @@
+<%@page import="kr.co.ebookstore.util.StringUtils"%>
+<%@page import="kr.co.ebookstore.dto.BoardDto"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.ebookstore.dao.BoardDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -17,13 +21,31 @@
 		<div class="col-12">
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
-	</div>	
+	</div>
+	<%	
+		// 한 페이지에 조회할 게시글의 개수
+		int rows = 5;
+		// 사용자가 요청한 pageNo 요청파라미터값 조회
+		int pageNo = StringUtils.stringToInt(request.getParameter("pno"), 1);
+		// 범위 계산
+		int begin = (pageNo - 1) * rows + 1;
+		int end = pageNo * rows;
+
+		BoardDao boardDao = BoardDao.getInstance();
+		List<BoardDto> boardDtos = boardDao.getBoardDtosByRange(begin, end);
+	%>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
 					<h4>게시글 리스트 
-					<a href="form.jsp" class="btn btn-primary float-right">새 글</a>
+					<%
+						if (loginedUserId != null) {
+					%>
+						<a href="form.jsp" class="btn btn-primary float-right">새 글</a>
+					<%
+						}
+					%>
 					</h4>
 				</div>
 				<div class="card-body">
@@ -47,23 +69,41 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td></td>
-								<td></td>
-								<td><a href=""></a></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
+						<%
+							for (BoardDto boardDto : boardDtos) {
+						%>
+								<tr>
+									<td><%=boardDto.getNo() %></td>
+									<td><%=boardDto.getCategory().getName() %></td>
+									<td><a href="<%=boardDto.getNo() %>"><%=boardDto.getTitle() %></a></td>
+									<td><%=boardDto.getUser().getName() %></td>
+									<td><%=boardDto.getLikes() %></td>
+									<td><%=boardDto.getCreatedDate() %></td>
+								</tr>
+						<%
+							}
+						%>
 						</tbody>
 					</table>
 				</div>
+				<%
+					int totalRecords = boardDao.getTotalRecords();
+					int totalPages = (int) (Math.ceil((double) totalRecords/rows));
+				%>
 				<div class="card-footer">
 					<ul class="pagination justify-content-center">
-						<li class="page-item"><a href="" class="page-link">&laquo;</a></li>
-						<li class="page-item "><a href="" class="page-link"></a></li>
-						<li class="page-item ">
-							<a href="" class="page-link">&raquo;</a>
+						<li class="page-item <%=pageNo <= 1 ? "disabled" : "" %>">
+							<a href="list.jsp?pno=<%=pageNo - 1 %>" class="page-link">&laquo;</a>
+						</li>
+						<%
+							for (int num=1; num<=totalPages; num++) {
+						%>
+							<li class="page-item <%=num == pageNo ? "active" : "" %>"><a href="list.jsp?pno=<%=num %>" class="page-link"><%=num %></a></li>
+						<%
+							}
+						%>
+						<li class="page-item <%=pageNo >= totalPages ? "disabled" : "" %>">
+							<a href="list.jsp?pno=<%=pageNo + 1 %>" class="page-link">&raquo;</a>
 						</li>
 					</ul>
 				</div>

@@ -1,5 +1,9 @@
+<%@page import="kr.co.ebookstore.vo.Category"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.ebookstore.dao.CategoryDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../common/loginCheck.jsp" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -18,10 +22,14 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		CategoryDao categoryDao = CategoryDao.getInstance();
+		List<Category> categories = categoryDao.getAllCategories();
+	%>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
-				<form method="post" action="">
+				<form method="post" action="boardinsert.jsp">
 					<div class="card-header"><h4>게시글 입력폼</h4></div>
 					<div class="card-body">
 						<div class="form-group row">
@@ -29,7 +37,13 @@
 							<div class="col-10">
 								<select class="form-control" name="category">
 									<option value="" selected disabled> 카테고리를 선택하세요</option>
-									<option value=""> </option>
+									<%
+										for (Category category : categories) {
+									%>
+										<option value="<%=category.getNo() %>"> <%=category.getName() %></option>
+									<%
+										}
+									%>
 								</select>
 							</div>
 						</div>

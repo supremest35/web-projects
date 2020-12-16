@@ -43,6 +43,17 @@
 	<%
 		}
 	%>
+	<%
+		if ("required".equals(error)) {
+	%>
+		<div class="col-6 offset-3">
+			<div class="alert alert-danger">
+				<strong>오류</strong> 로그인이 필요한 페이지에 접속했습니다. 로그인 후 이용하세요.
+			</div>
+		</div>
+	<%
+		}
+	%>
 	<div class="row">
 		<div class="col-6 offset-3">
 			<div class="card">
