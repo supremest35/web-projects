@@ -33,7 +33,7 @@
       <%
       	if (loginedUserId != null) {
       %>
-      	<span class="navbar-text"><strong class="text-white"></strong>님 환영합니다</span>
+      	<span class="navbar-text"><strong class="text-white"><%=loginedUserName %></strong>(<%=loginedUserId %>)님 환영합니다</span>
       <%
       	}
       %>
