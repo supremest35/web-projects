@@ -16,6 +16,11 @@ import kr.co.ebookstore.vo.User;
 public class BoardDao {
 	
 	private static final String GET_TOTAL_RECORDS_SQL = "select count(*) cnt from ebookstore_boards";
+	private static final String GET_BOARDDTO_BY_NO_SQL = "select *"
+													   + " from ebookstore_boards a, ebookstore_board_categories b, ebookstore_users c"
+													   + " where a.board_category_no = b.category_no"
+													   + " and a.board_writer_id = c.user_id"
+													   + " and a.board_no = ?";
 	private static final String GET_BOARDDTOS_BY_RANGE_SQL = "select *"
 														   + " from (select row_number() over(order by a.board_no desc) rn, a.*, b.*, c.* "
 														   + "		 from ebookstore_boards a, ebookstore_board_categories b, ebookstore_users c"
@@ -49,6 +54,48 @@ public class BoardDao {
 		return totalRecords;
 	}
 	
+	public BoardDto getBoardDtoByNo(int boardNo) throws SQLException {
+		BoardDto boardDto = null;
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_BOARDDTO_BY_NO_SQL);
+		pstmt.setInt(1, boardNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			boardDto = new BoardDto();
+			boardDto.setNo(rs.getInt("board_no"));
+			boardDto.setTitle(rs.getString("board_title"));
+			boardDto.setContent(rs.getString("board_content"));
+			boardDto.setLikes(rs.getInt("board_likes"));
+			boardDto.setDeleted(rs.getString("board_deleted"));
+			boardDto.setCreatedDate(rs.getDate("board_created_date"));
+			boardDto.setNo(rs.getInt("board_no"));
+			boardDto.setTitle(rs.getString("board_title"));
+			boardDto.setContent(rs.getString("board_content"));
+			boardDto.setLikes(rs.getInt("board_likes"));
+			boardDto.setDeleted(rs.getString("board_deleted"));
+			boardDto.setCreatedDate(rs.getDate("board_created_date"));
+			
+			Category category = new Category();
+			category.setNo(rs.getInt("category_no"));
+			category.setName(rs.getString("category_name"));
+			boardDto.setCategory(category);
+			
+			User user = new User();
+			user.setId(rs.getString("user_id"));
+			user.setName(rs.getString("user_name"));
+			user.setEmail(rs.getString("user_email"));
+			user.setDisabled(rs.getString("user_disabled"));
+			boardDto.setUser(user);
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return boardDto;
+	}
+	
 	public List<BoardDto> getBoardDtosByRange(int begin, int end) throws SQLException {
 		List<BoardDto> boardDtos = new ArrayList<BoardDto>();
 		
@@ -60,6 +107,12 @@ public class BoardDao {
 		
 		while (rs.next()) {
 			BoardDto boardDto = new BoardDto();
+			boardDto.setNo(rs.getInt("board_no"));
+			boardDto.setTitle(rs.getString("board_title"));
+			boardDto.setContent(rs.getString("board_content"));
+			boardDto.setLikes(rs.getInt("board_likes"));
+			boardDto.setDeleted(rs.getString("board_deleted"));
+			boardDto.setCreatedDate(rs.getDate("board_created_date"));
 			boardDto.setNo(rs.getInt("board_no"));
 			boardDto.setTitle(rs.getString("board_title"));
 			boardDto.setContent(rs.getString("board_content"));

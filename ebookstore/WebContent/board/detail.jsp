@@ -1,3 +1,6 @@
+<%@page import="kr.co.ebookstore.dto.BoardDto"%>
+<%@page import="kr.co.ebookstore.dao.BoardDao"%>
+<%@page import="kr.co.ebookstore.util.StringUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -18,6 +21,13 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		int pageNo = StringUtils.stringToInt(request.getParameter("pno"), 1);
+		int boardNo = StringUtils.stringToInt(request.getParameter("bno"));
+		
+		BoardDao boardDao = BoardDao.getInstance();
+		BoardDto boardDto = boardDao.getBoardDtoByNo(boardNo);
+	%>
 	<div class="row">
 		<div class="col-12">
 			<div class="card">
@@ -33,36 +43,45 @@
 						<tbody>
 							<tr>
 								<th>번호</th>
-								<td></td>
+								<td><%=boardDto.getNo() %></td>
 								<th>등록일</th>
-								<td></td>
+								<td><%=boardDto.getCreatedDate() %></td>
 							</tr>
 							<tr>
 								<th>카테고리</th>
-								<td colspan="3"></td>
+								<td colspan="3"><%=boardDto.getCategory().getName() %></td>
 							</tr>
 							<tr>
 								<th>제목</th>
-								<td colspan="3"></td>
+								<td colspan="3"><%=boardDto.getTitle() %></td>
 							</tr>
 							<tr>
 								<th>작성자</th>
-								<td></td>
+								<td><%=boardDto.getUser().getName() %></td>
 								<th>추천수</th>
-								<td><span class="badge badge-success float">내가 추천한 글</span></td>
+								<td><%=boardDto.getLikes() %><span class="badge badge-success float">내가 추천한 글</span></td>
 							</tr>
 							<tr>
 								<th>내용</th>
-								<td colspan="3"></td>
+								<td colspan="3"><%=boardDto.getContent().replace("\n", "<br />") %></td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 				<div class="card-footer">
+				<%
+					if (boardDto.getUser().getId().equals(loginedUserId)) {
+				%>		
 						<a href="" class="btn btn-warning">수정</a>
 						<a href="" class="btn btn-danger">삭제</a>
+				<%
+					} else {
+				%>	
 						<a href="" class="btn btn-success">추천</a>
-					<a href="" class="btn btn-primary float-right">목록</a>
+				<%
+					}
+				%>
+					<a href="list.jsp?pno=<%=pageNo %>" class="btn btn-primary float-right">목록</a>
 				</div>
 			</div>
 		</div>
@@ -70,6 +89,9 @@
 	<div class="row mt-5">
 		<div class="col-12">
 			<div class="card">
+			<%
+				if (loginedUserId != null) {
+			%>
 					<div class="card-body">
 						<form>
 							<div class="form-group row">
@@ -82,6 +104,9 @@
 							</div>
 						</form>
 					</div>
+			<%
+				}
+			%>
 				<ul class="list-group">
 					<li class="list-group-item">
     					<div class="d-flex w-100 justify-content-between">

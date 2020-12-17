@@ -75,7 +75,7 @@
 								<tr>
 									<td><%=boardDto.getNo() %></td>
 									<td><%=boardDto.getCategory().getName() %></td>
-									<td><a href="<%=boardDto.getNo() %>"><%=boardDto.getTitle() %></a></td>
+									<td><a href="detail.jsp?pno=<%=pageNo %>&bno=<%=boardDto.getNo() %>"><%=boardDto.getTitle() %></a></td>
 									<td><%=boardDto.getUser().getName() %></td>
 									<td><%=boardDto.getLikes() %></td>
 									<td><%=boardDto.getCreatedDate() %></td>
