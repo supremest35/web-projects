@@ -24,9 +24,23 @@
 	<%
 		int pageNo = StringUtils.stringToInt(request.getParameter("pno"), 1);
 		int boardNo = StringUtils.stringToInt(request.getParameter("bno"));
+		String error = request.getParameter("error");
 		
 		BoardDao boardDao = BoardDao.getInstance();
 		BoardDto boardDto = boardDao.getBoardDtoByNo(boardNo);
+	%>
+	<%
+		if ("modify".equals(error)) {		
+	%>
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					<strong>오류</strong> 다른 사람이 작성한 글은 수정/삭제할 수 없습니다.
+				</div>
+			</div>
+		</div>
+	<%
+		}
 	%>
 	<div class="row">
 		<div class="col-12">
@@ -72,7 +86,7 @@
 				<%
 					if (boardDto.getUser().getId().equals(loginedUserId)) {
 				%>		
-						<a href="" class="btn btn-warning">수정</a>
+						<a href="modifyform.jsp?bno=<%=boardNo %>&pno=<%=pageNo %>" class="btn btn-warning">수정</a>
 						<a href="" class="btn btn-danger">삭제</a>
 				<%
 					} else {

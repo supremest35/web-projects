@@ -16,6 +16,7 @@ import kr.co.ebookstore.vo.User;
 public class BoardDao {
 	
 	private static final String GET_TOTAL_RECORDS_SQL = "select count(*) cnt from ebookstore_boards";
+	private static final String GET_BOARD_BY_NO_SQL = "select * from ebookstore_boards where board_no = ?";
 	private static final String GET_BOARDDTO_BY_NO_SQL = "select *"
 													   + " from ebookstore_boards a, ebookstore_board_categories b, ebookstore_users c"
 													   + " where a.board_category_no = b.category_no"
@@ -30,6 +31,7 @@ public class BoardDao {
 														   + " where rn >= ? and rn <= ?";
 	private static final String INSERT_BOARD_SQL = "insert into ebookstore_boards(board_no, board_category_no, board_title, board_writer_id, board_content)"
 												 + " values(ebookstore_board_seq.nextval, ?, ?, ?, ?)";
+	private static final String UPDATE_BOARD_SQL = "update ebookstore_boards set board_category_no = ?, board_title = ?, board_content = ? where board_no = ?";
 	
 	// 싱글턴 객체
 	private static final BoardDao boardDao = new BoardDao();
@@ -52,6 +54,32 @@ public class BoardDao {
 		pstmt.close();
 		con.close();
 		return totalRecords;
+	}
+	
+	public Board getBoardByNo(int boardNo) throws SQLException {
+		Board board = null;
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_BOARD_BY_NO_SQL);
+		pstmt.setInt(1, boardNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			board = new Board();
+			board.setNo(rs.getInt("board_no"));
+			board.setCategoryNo(rs.getInt("board_category_no"));
+			board.setTitle(rs.getString("board_title"));
+			board.setWriterId(rs.getString("board_writer_id"));
+			board.setContent(rs.getString("board_content"));
+			board.setLikes(rs.getInt("board_likes"));
+			board.setDeleted(rs.getString("board_deleted"));
+			board.setCreatedDate(rs.getDate("board_created_date"));
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return board;
 	}
 	
 	public BoardDto getBoardDtoByNo(int boardNo) throws SQLException {
@@ -148,6 +176,19 @@ public class BoardDao {
 		pstmt.setString(2, board.getTitle());
 		pstmt.setString(3, board.getWriterId());
 		pstmt.setString(4, board.getContent());
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		con.close();
+	}
+	
+	public void updateBoard(Board board) throws SQLException {
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(UPDATE_BOARD_SQL);
+		pstmt.setInt(1, board.getCategoryNo());
+		pstmt.setString(2, board.getTitle());
+		pstmt.setString(3, board.getContent());
+		pstmt.setInt(4, board.getNo());
 		pstmt.executeUpdate();
 		
 		pstmt.close();
