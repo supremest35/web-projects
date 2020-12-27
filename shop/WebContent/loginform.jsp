@@ -18,20 +18,35 @@
 			<%@ include file="common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		String error = request.getParameter("error");
+	%>
+	<%
+		if ("blank".equals(error)){
+	%>
 	<div class="col-6 offset-3">
 		<div class="alert alert-danger">
 			<strong>오류</strong> 아이디와 비밀번호는 필수 입력값입니다.
 		</div>
 	</div>
+	<%
+		}
+	%>
+	<%
+		if("invalid".equals(error)) {
+	%>
 	<div class="col-6 offset-3">
 		<div class="alert alert-danger">
 			<strong>오류</strong> 아이디 혹은 비밀번호가 올바르지 않습니다.
 		</div>
 	</div>
+	<%
+		}
+	%>
 	<div class="row">
 		<div class="col-6 offset-3">
 			<div class="card">
-				<form method="post" action="register.jsp">
+				<form method="post" action="login.jsp">
 					<div class="card-header"><h4>로그인 폼</h4></div>
 					<div class="card-body">
 						<div class="form-group">

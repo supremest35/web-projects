@@ -9,4 +9,25 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <filter>
+  	<filter-name>encodingFilter</filter-name>
+  <filter-class>kr.co.shop.filter.CharacterEncodingFilter</filter-class>
+  </filter>
+  <filter>
+  	<filter-name>loginCheckFilter</filter-name>
+  	<filter-class>kr.co.shop.filter.LoginCheckFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>encodingFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>loginCheckFilter</filter-name>
+  	<url-pattern>/completed.jsp</url-pattern>
+  	<url-pattern>/product/insertReview.jsp</url-pattern>
+  	<url-pattern>/order/*</url-pattern>
+  	<url-pattern>/my/*</url-pattern>
+  	<url-pattern>/cart/*</url-pattern>
+  </filter-mapping>  
 </web-app>
