@@ -1,5 +1,7 @@
+<%@page import="kr.co.shop.util.StringUtils"%>
 <%@ page pageEncoding="UTF-8"%>
 <%
+	Integer loginedUserNo = (Integer) session.getAttribute("LOGINED_USER_NO");
 	String loginedUserId = (String) session.getAttribute("LOGINED_USER_ID");
 	String loginedUserName = (String) session.getAttribute("LOGINED_USER_NAME");
 %>
