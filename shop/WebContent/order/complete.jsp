@@ -1,3 +1,10 @@
+<%@page import="kr.co.shop.dto.OrderItemDto"%>
+<%@page import="kr.co.shop.vo.OrderItem"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.shop.vo.Order"%>
+<%@page import="kr.co.shop.dao.OrderDao"%>
+<%@page import="kr.co.shop.vo.UserPointHistory"%>
+<%@page import="kr.co.shop.dao.UserDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,13 +33,23 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		int orderNo = StringUtils.stringToInt(request.getParameter("orderNo"));
+		
+		UserDao userDao = UserDao.getInstance();
+		UserPointHistory userPointHistory = userDao.getPointHistoryByOrderNo(orderNo);
+		
+		OrderDao orderDao = OrderDao.getInstance();
+		Order order = orderDao.getOrderByNo(orderNo);
+		List<OrderItemDto> orderItemDtos = orderDao.getOrderItemDtosByOrderNo(orderNo);
 	
+	%>
 	<!-- 주문 상품 정보 시작 -->
 	<div class="row mb-3">
 		<div class="col-12">
 			<div class="alert alert-success text-center" style="font-size: 27px;">
-				<span><strong>홍길동</strong>님 주문이 완료되었습니다.</span><br />
-				<span class="mt-2 small">주문번호 : 10002501 포인트 적립액 : 3,000원</span>
+				<span><strong><%=loginedUserName %></strong>님 주문이 완료되었습니다.</span><br />
+				<span class="mt-2 small">주문번호 : <%=orderNo %> 포인트 적립액 : <%=userPointHistory.getAmount() %>원</span>
 			</div>
 		</div>
 		<div class="col-12">
@@ -57,40 +74,34 @@
 							</tr>
 						</thead>
 						<tbody>
+						<%
+							for (OrderItemDto orderItemDto : orderItemDtos) {
+						%>
 							<tr>
 								<td>
-									<img src="../resources/images/book.jpg" width="60px" height="88px" />
-									<span class="align-top"><a href="detail.jsp" class="text-body">불안한 마음을 잠재우는 방법</a></span>
+									<img src="../resources/images/<%=orderItemDto.getBook().getFileName() %>.jpg" width="60px" height="88px" />
+									<span class="align-top"><a href="detail.jsp?orderNo=<%=orderNo %>" class="text-body"><%=orderItemDto.getBook().getTitle() %></a></span>
 								</td>
-								<td>10,000원</td>
+								<td><%=orderItemDto.getBook().getPrice() %>원</td>
 								<td>
-									9,000원<br/>
-									<small>(500원 적립)</small>
+									<%=orderItemDto.getBook().getDiscountPrice() %>원<br/>
+									<small>(<%=orderItemDto.getBook().getPoint() %>원 적립)</small>
 								</td>
-								<td>1</td>
-								<td><strong>9,000원</strong></td>
+								<td><%=orderItemDto.getAmount() %></td>
+								<td><strong><%=orderItemDto.getAmount() * orderItemDto.getPrice() %>원</strong></td>
 							</tr>
 							<tr>
-								<td>
-									<img src="../resources/images/book.jpg" width="60px" height="88px" />
-									<span class="align-top"><a href="detail.jsp" class="text-body">불안한 마음을 잠재우는 방법</a></span>
-								</td>
-								<td>10,000원</td>
-								<td>
-									9,000원<br/>
-									<small>(500원 적립)</small>
-								</td>
-								<td>1</td>
-								<td><strong>9,000원</strong></td>
-							</tr>
+						<%
+							}
+						%>
 						</tbody>
 					</table>
 				</div>
 				<div class="card-footer text-right">
 					<span>
-					상품 총 금액 : <strong class="mr-5">18,000원</strong> 
-					포인트 사용액 : <strong class="mr-5">3,000원</strong>
-					총 결재 금액 : <strong class="mr-5 text-danger">15,000원</strong> 
+					상품 총 금액 : <strong class="mr-5"><%=order.getTotalOrderPrice() %>원</strong> 
+					포인트 사용액 : <strong class="mr-5"><%=order.getUsedPoint() %>원</strong>
+					총 결재 금액 : <strong class="mr-5 text-danger"><%=order.getTotalPaymentPrice() %>원</strong> 
 					</span>
 				</div>	
 			</div>

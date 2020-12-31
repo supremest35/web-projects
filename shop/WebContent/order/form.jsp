@@ -67,15 +67,13 @@
 				cartItemDtos.add(cartItemDto);
 			}
 		} else {
-			// insert.jsp에 cartno만 넘겨주면 값을 조회하기 쉽게 하기 위해서 바로구매도 장바구니에 저장하기
-			CartItem cartItem = new CartItem();
-			cartItem.setBookNo(bookNo);
-			cartItem.setUserNo(loginedUserNo);
-			cartItem.setAmount(amount);
-			cartDao.insertCartItem(cartItem);
-			
-			// 방금 저장한 장바구니에 들어있는 정보를 조회 후 cartItemDtos 리스트에 저장
-		 	CartItemDto cartItemDto = cartDao.getCartItemDtoByBookNoAndUserNo(bookNo, loginedUserNo);
+		 	CartItemDto cartItemDto = new CartItemDto();
+		 	cartItemDto.setAmount(amount);
+		 	
+		 	BookDao bookDao = BookDao.getInstance();
+		 	Book book = bookDao.getBookByNo(bookNo);
+		 	cartItemDto.setBook(book);
+		 	
 			cartItemDtos.add(cartItemDto);
 		} 
 		
@@ -86,6 +84,10 @@
 	
 	<form method="post" action="insert.jsp">
 		<!-- 주문 상품 정보 시작 -->
+		<!-- 바로구매 눌렀을 때 책 번호, 가격, 구매수량 넘겨주기  -->
+		<input type="hidden" name="bookno" value="<%=cartItemDtos.get(0).getBook().getNo() %>" />
+		<input type="hidden" name="price" value="<%=cartItemDtos.get(0).getBook().getDiscountPrice() %>" />
+		<input type="hidden" name="amount" value="<%=cartItemDtos.get(0).getAmount() %>" />
 		<div class="row mb-3">
 			<div class="col-12">
 				<div class="card">
@@ -121,7 +123,7 @@
 									<td>
 										<%=cartItemDto.getBook().getDiscountPrice() %>원<br/>
 										<small>(<%=cartItemDto.getBook().getPoint() %>원 적립)</small>
-										<!-- insert.jsp에 넘겨줄 장바구니 번호 -->
+										<!-- insert.jsp에 넘겨줄 장바구니 번호 (장바구니에서 구매했을 때)-->
 										<input type="hidden" name="cartno" value="<%=cartItemDto.getNo() %>" />
 									</td>
 									<td><%=cartItemDto.getAmount() %></td>
@@ -136,6 +138,7 @@
 						</table>
 					</div>
 					<div class="card-footer text-right">
+					<input type="hidden" name="totalPoint" value="<%=totalOrderPoint %>" />
 						<span>상품 총 금액 : <strong class="mr-5"><%=totalOrderPrice %>원</strong> 포인트 적립액 : <strong><%=totalOrderPoint %>원</strong></span>
 					</div>	
 				</div>

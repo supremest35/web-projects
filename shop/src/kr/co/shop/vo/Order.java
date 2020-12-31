@@ -16,7 +16,7 @@ public class Order {
 	private int totalOrderPrice;
 	private int usedPoint;
 	private int totalPaymentPrice;
-	private int bankNp;
+	private int bankNo;
 	private String bankCardAccount;
 	private Date createdDate;
 	
@@ -118,12 +118,12 @@ public class Order {
 		this.totalPaymentPrice = totalPaymentPrice;
 	}
 
-	public int getBankNp() {
-		return bankNp;
+	public int getBankNo() {
+		return bankNo;
 	}
 
-	public void setBankNp(int bankNp) {
-		this.bankNp = bankNp;
+	public void setBankNo(int bankNo) {
+		this.bankNo = bankNo;
 	}
 
 	public String getBankCardAccount() {
