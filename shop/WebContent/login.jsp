@@ -27,6 +27,7 @@
 		return;
 	}
 	
+	session.setAttribute("LOGINED_USER_NO", user.getNo());
 	session.setAttribute("LOGINED_USER_ID", user.getId());
 	session.setAttribute("LOGINED_USER_NAME", user.getName());
 	

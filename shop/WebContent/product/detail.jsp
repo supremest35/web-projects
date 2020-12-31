@@ -1,3 +1,6 @@
+<%@page import="kr.co.shop.dao.UserDao"%>
+<%@page import="kr.co.shop.vo.User"%>
+<%@page import="kr.co.shop.vo.ReviewLikeUser"%>
 <%@page import="kr.co.shop.dto.ReviewDto"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.shop.dao.ReviewDao"%>
@@ -39,6 +42,9 @@
 
 		BookDao bookDao = BookDao.getInstance();
 		BookDto bookDto = bookDao.getBookDtoByNo(bookNo);
+		
+		UserDao userDao = UserDao.getInstance();
+		User user = userDao.getUserById(loginedUserId);
 	%>
 	<div class="row mb-3">
 		<div class="col-12 mb-3">
@@ -163,7 +169,13 @@
 							</small>
 						</h5>
 						<div class="card-text"><%=reviewDto.getContent() %></div>
-						<div class="mt-2 text-secondary text-right"><small>이 리뷰가 도움이 되셨나요? <a href="" class="ml-3 btn btn-outline-secondary btn-xs"><i class="fa fa-heart-o"></i> <%=reviewDto.getLikeCount() %></a></small></div>
+						<%
+							ReviewLikeUser reviewLikeUser = null;
+							if (user != null) {
+								reviewLikeUser = reviewDao.getReviewLikeUserByNo(user.getNo(), reviewDto.getNo());
+							}
+						%>
+						<div class="mt-2 text-secondary text-right"><small>이 리뷰가 도움이 되셨나요? <a href="likes.jsp?pno=<%=pageNo %>&rpno=<%=reviewPageNo %>&reviewno=<%=reviewDto.getNo() %>" class="ml-3 btn btn-outline-secondary btn-xs <%=user == null ? "disabled" : "" %>" ><i class="fa fa-heart<%=reviewLikeUser == null ? "-o" : " text-danger" %>" ></i> <%=reviewDto.getLikeCount() %></a></small></div>
 					</div>
 				<%
 					}
@@ -272,17 +284,17 @@
 <script type="text/javascript">
 	function directBuy() {
 		var formElement = document.querySelector("#detail-menu");
-		formElement.setAttribute("action", "../order/buy.jsp");
+		formElement.setAttribute("action", "../order/form.jsp");
 		
 		formElement.submit();
 	}
 	function insertCart() {
 		var formElement = document.querySelector("#detail-menu");
-		formElement.setAttribute("action", "../cart/insertitem.jsp");
+		formElement.setAttribute("action", "../cart/insertItem.jsp");
 		
 		formElement.submit();
 	}
-
+	
 </script>
 </body>
 </html>

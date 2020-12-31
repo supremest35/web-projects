@@ -10,6 +10,7 @@ import kr.co.shop.vo.User;
 
 public class UserDao {
 	
+	private static final String GET_USER_BY_USERNO_SQL = "select * from shop_users where user_no = ?";
 	private static final String GET_USER_BY_USERID_SQL = "select * from shop_users where user_id = ?";
 	private static final String INSERT_USER_SQL = "insert into shop_users(user_no, user_id, user_password, user_name, user_tel, user_email)"
 												+ " values(shop_user_no_seq.nextval, ?, ?, ?, ?, ?)";
@@ -20,6 +21,34 @@ public class UserDao {
 		return userDao;
 	}
 	
+	public User getUserByNo(int userNo) throws SQLException {
+		User user = null;
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_USER_BY_USERNO_SQL);
+		pstmt.setInt(1, userNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			user = new User();
+			user.setNo(rs.getInt("user_no"));
+			user.setId(rs.getString("user_id"));
+			user.setPassword(rs.getString("user_password"));
+			user.setName(rs.getString("user_name"));
+			user.setTel(rs.getString("user_tel"));
+			user.setEmail(rs.getString("user_email"));
+			user.setGrade(rs.getString("user_grade"));
+			user.setPoint(rs.getInt("user_point"));
+			user.setStatus(rs.getString("user_status"));
+			user.setCreatedDate(rs.getDate("user_created_date"));
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return user;
+	}
+
 	public User getUserById(String userId) throws SQLException {
 		User user = null;
 		

@@ -26,6 +26,7 @@
   	<filter-name>loginCheckFilter</filter-name>
   	<url-pattern>/completed.jsp</url-pattern>
   	<url-pattern>/product/insertReview.jsp</url-pattern>
+  	<url-pattern>/product/likes.jsp</url-pattern>
   	<url-pattern>/order/*</url-pattern>
   	<url-pattern>/my/*</url-pattern>
   	<url-pattern>/cart/*</url-pattern>

@@ -1,3 +1,14 @@
+<%@page import="kr.co.shop.vo.BankCardCompany"%>
+<%@page import="kr.co.shop.dao.BankCardDao"%>
+<%@page import="kr.co.shop.vo.User"%>
+<%@page import="kr.co.shop.vo.Book"%>
+<%@page import="kr.co.shop.dao.BookDao"%>
+<%@page import="kr.co.shop.dao.UserDao"%>
+<%@page import="kr.co.shop.dto.CartItemDto"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.shop.dao.CartDao"%>
+<%@page import="kr.co.shop.vo.CartItem"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,6 +37,52 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+	 	int bookNo = StringUtils.stringToInt(request.getParameter("bookno"), 0);
+		int amount = StringUtils.stringToInt(request.getParameter("amount"));
+		String[] cartNumbers = request.getParameterValues("cartno");
+	
+		CartDao cartDao = CartDao.getInstance();
+		
+		// 주문할 책의 정보를 담는 List 객체(dto인 이유는 아래에서 책에 대한 정보를 보여줘야되기 때문)
+		List<CartItemDto> cartItemDtos = new ArrayList<>();
+		// bookNo == 0 이라면 장바구니에서 구매한 것.
+		// 장바구니에서 체크한 책들의 정보를 장바구니 테이블에 저장하고, cartItemDtos 리스트에 저장한다.
+		if (bookNo == 0) {
+			// 변경된 수량을 장바구니 테이블에 저장하는 실행문
+			List<CartItem> cartItems = cartDao.getCartItemsByUserNo(loginedUserNo);
+			
+			// 저기 넘겨주는 이름을 String로 해야됨. 그러면 그냥 list에서 넘겨줄때도 이름-카트번호로 하면될듯?
+			for (CartItem cartItem : cartItems) {
+				String name = "amount-" + cartItem.getNo();
+				cartItem.setAmount(StringUtils.stringToInt(request.getParameter(name)));
+				cartDao.updateCartItem(cartItem);
+			} 
+			
+			// 장바구니에서 체크한 책 번호들을 이용해서 장바구니 안에 있는 정보를 조회
+			// cartItemDtos 리스트에 저장
+			for (String cartNumber : cartNumbers) {
+				int cartNo = Integer.parseInt(cartNumber);
+				CartItemDto cartItemDto = cartDao.getCartItemDtoByNo(cartNo);
+				cartItemDtos.add(cartItemDto);
+			}
+		} else {
+			// insert.jsp에 cartno만 넘겨주면 값을 조회하기 쉽게 하기 위해서 바로구매도 장바구니에 저장하기
+			CartItem cartItem = new CartItem();
+			cartItem.setBookNo(bookNo);
+			cartItem.setUserNo(loginedUserNo);
+			cartItem.setAmount(amount);
+			cartDao.insertCartItem(cartItem);
+			
+			// 방금 저장한 장바구니에 들어있는 정보를 조회 후 cartItemDtos 리스트에 저장
+		 	CartItemDto cartItemDto = cartDao.getCartItemDtoByBookNoAndUserNo(bookNo, loginedUserNo);
+			cartItemDtos.add(cartItemDto);
+		} 
+		
+		int totalOrderPrice = 0;
+		int totalOrderPoint = 0;
+		
+	%>
 	
 	<form method="post" action="insert.jsp">
 		<!-- 주문 상품 정보 시작 -->
@@ -52,37 +109,34 @@
 								</tr>
 							</thead>
 							<tbody>
+						 	<%
+								for (CartItemDto cartItemDto : cartItemDtos) {
+							%>
 								<tr>
 									<td>
-										<img src="../resources/images/book.jpg" width="60px" height="88px" />
-										<span class="align-top"><a href="detail.jsp" class="text-body">불안한 마음을 잠재우는 방법</a></span>
+										<img src="../resources/images/<%=cartItemDto.getBook().getFileName() %>.jpg" width="60px" height="88px" />
+										<span class="align-top"><a href="../product/detail.jsp?bookno=<%=cartItemDto.getBook().getNo() %>" class="text-body"><%=cartItemDto.getBook().getTitle() %></a></span>
 									</td>
-									<td>10,000원</td>
+									<td><%=cartItemDto.getBook().getPrice() %>원</td>
 									<td>
-										9,000원<br/>
-										<small>(500원 적립)</small>
+										<%=cartItemDto.getBook().getDiscountPrice() %>원<br/>
+										<small>(<%=cartItemDto.getBook().getPoint() %>원 적립)</small>
+										<!-- insert.jsp에 넘겨줄 장바구니 번호 -->
+										<input type="hidden" name="cartno" value="<%=cartItemDto.getNo() %>" />
 									</td>
-									<td>1</td>
-									<td><strong>9,000원</strong></td>
+									<td><%=cartItemDto.getAmount() %></td>
+									<td><strong><%=cartItemDto.getAmount() * cartItemDto.getBook().getDiscountPrice() %>원</strong></td>
 								</tr>
-								<tr>
-									<td>
-										<img src="../resources/images/book.jpg" width="60px" height="88px" />
-										<span class="align-top"><a href="detail.jsp" class="text-body">불안한 마음을 잠재우는 방법</a></span>
-									</td>
-									<td>10,000원</td>
-									<td>
-										9,000원<br/>
-										<small>(500원 적립)</small>
-									</td>
-									<td>1</td>
-									<td><strong>9,000원</strong></td>
-								</tr>
+							<%
+								totalOrderPrice += cartItemDto.getAmount() * cartItemDto.getBook().getDiscountPrice();
+								totalOrderPoint += cartItemDto.getAmount() * cartItemDto.getBook().getPoint();
+								}
+							%>
 							</tbody>
 						</table>
 					</div>
 					<div class="card-footer text-right">
-						<span>상품 총 금액 : <strong class="mr-5">18,000원</strong> 포인트 적립액 : <strong>1,000원</strong></span>
+						<span>상품 총 금액 : <strong class="mr-5"><%=totalOrderPrice %>원</strong> 포인트 적립액 : <strong><%=totalOrderPoint %>원</strong></span>
 					</div>	
 				</div>
 			</div>
@@ -126,7 +180,10 @@
 			</div>
 		</div>
 		<!-- 배송정보 끝 -->
-			
+		<%
+			UserDao userDao = UserDao.getInstance();
+			User user = userDao.getUserByNo(loginedUserNo);
+		%>
 		<!-- 결재정보 시작 -->
 		<div class="row mt-3">
 			<div class="col-12">
@@ -135,12 +192,12 @@
 					<div class="card-body">
 						<div class="form-row">
 							<div class="form-group col-3">
-								<label>사용가능 포인트 <button class="btn btn-primary btn-xs">사용하기</button></label>
-      							<input type="text" class="form-control" name="usablePoint" value="5800" disabled>
+								<label>사용가능 포인트 <button type="button" class="btn btn-primary btn-xs" onclick="usePoint(<%=user.getPoint() %>)">사용하기</button></label>
+      							<input type="text" class="form-control" name="usablePoint" value="<%=user.getPoint() %>" disabled>
 							</div>
 							<div class="form-group col-3">
 								<label>총 구매금액</label>
-      							<input type="text" class="form-control" name="totalPrice" value="18000" readonly>
+      							<input type="text" class="form-control" name="totalPrice" value="<%=totalOrderPrice %>" readonly>
 							</div>
 							<div class="form-group col-3">
 								<label>포인트 사용액</label>
@@ -148,28 +205,25 @@
 							</div>
 							<div class="form-group col-3">
 								<label>총 결재금액</label>
-      							<input type="text" class="form-control" name="orderPrice" value="18000" readonly>
+      							<input type="text" class="form-control" name="orderPrice" value="<%=totalOrderPrice %>" readonly>
 							</div>
 						</div>
+						<%
+							BankCardDao bankCardDao = BankCardDao.getInstance();
+							List<BankCardCompany> bankCardCompanies = bankCardDao.getAllBankCardCompanies();
+						%>
 						<div class="form-row">
 							<div class="form-group col-6">
 								<label>은행 및 카드사</label>
       							<select name="bank" class="form-control">
                                 	<option value="" selected disabled>카드사 및 은행 선택</option>
-                                    <option value="카카오뱅크" > 카카오뱅크</option>
-                                    <option value="롯데카드" > 롯데카드</option>
-                                    <option value="신한카드" > 신한카드</option>
-                                    <option value="국민카드" > 국민카드</option>
-                                    <option value="삼성카드" > 삼성카드</option>
-                                    <option value="씨티카드" > 씨티카드</option>
-                                    <option value="BC카드" > BC카드/우리카드</option>
-                                    <option value="국민은행" > 국민은행</option>
-                                    <option value="신한은행" > 신한은행</option>
-                                    <option value="하나은행" > 하나은행</option>
-                                    <option value="기업은행" > 기업은행</option>
-                                    <option value="농협" > 농협</option>
-                                    <option value="수협" > 수협</option>
-                                    <option value="새마을금고" > 새마을금고</option>
+                                	<%
+                                		for (BankCardCompany bankCardCompany : bankCardCompanies) {
+                                	%>
+                                    	<option value="<%=bankCardCompany.getNo() %>" > <%=bankCardCompany.getName() %></option>
+									<%
+                                		}
+									%>
                             	</select>
 							</div>
 							<div class="form-group col-6">
@@ -193,5 +247,22 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	function usePoint(savedPoint) {
+		var usedPoint = document.querySelector("[name='usedPoint']");
+		
+		// 사용하기 버튼을 눌렀을때, 포인트 사용액이 "0"이면 사용가능 포인트로 바꾸고 총 결재금액에서 사용가능 포인트를 빼준다.
+		// 							 				 "0"이 아니면 "0"으로 바꾸고 총 결재금액에서 사용가능 포인트를 더해준다.
+		if (usedPoint.value === "0") {
+			usedPoint.value = savedPoint;
+			document.querySelector("[name='orderPrice']").value = parseInt(document.querySelector("[name='orderPrice']").value) - savedPoint;
+		} else {
+			usedPoint.value = "0";
+			document.querySelector("[name='orderPrice']").value = parseInt(document.querySelector("[name='orderPrice']").value) + savedPoint;
+		}
+	}
+
+</script>
 </body>
 </html>

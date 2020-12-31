@@ -11,11 +11,13 @@ import kr.co.shop.dto.ReviewDto;
 import kr.co.shop.util.ConnectionUtil;
 import kr.co.shop.vo.Book;
 import kr.co.shop.vo.Review;
+import kr.co.shop.vo.ReviewLikeUser;
 import kr.co.shop.vo.User;
 
 public class ReviewDao {
 	
 	private static final String GET_TOTAL_RECORDS_BY_BOOKNO_SQL = "select count(*) cnt from shop_book_reviews where book_no = ?";
+	private static final String GET_REVIEW_BY_NO_SQL = "select * from shop_book_reviews where review_no = ?";
 	private static final String GET_REVIEWDTOS_BY_BOOKNO_AND_RANGE_SQL = "select *"
 																	   + " from (select row_number() over(order by a.review_no desc) rn, a.*, b.category_no, b.book_title, c.user_id, c.user_name"
 																	   + " 	     from shop_book_reviews a, shop_books b, shop_users c"
@@ -23,8 +25,12 @@ public class ReviewDao {
 																	   + "	     and a.user_no = c.user_no"
 																	   + "		 and a.book_no = ?)"
 																	   + " where rn >= ? and rn <= ?";
+	private static final String GET_REVIEW_LIKE_USER_BY_NO_SQL = "select * from shop_review_like_users where user_no = ? and review_no = ?";
 	private static final String INSERT_REVIEW_SQL = "insert into shop_book_reviews(review_no, book_no, user_no, review_title, review_content, review_point)"
 												  + " values(shop_book_review_seq.nextval, ?, ?, ?, ?, ?)";
+	private static final String INSERT_REVIEW_LIKE_USER_SQL = "insert into shop_review_like_users(user_no, review_no) values(?, ?)";
+	private static final String UPDATE_REVIEW_SQL = "update shop_book_reviews set review_title = ?, review_content = ?, review_point = ?, review_like_count = ? where review_no = ?";
+	private static final String DELETE_REVIEW_LIKE_USER_SQL = "delete from shop_review_like_users where user_no = ? and review_no = ?";
 	
 	private static final ReviewDao reviewDao = new ReviewDao();
 	private ReviewDao() {}
@@ -47,6 +53,53 @@ public class ReviewDao {
 		pstmt.close();
 		con.close();
 		return totalRecords;
+	}
+
+	public Review getReviewByNo(int reviewNo) throws SQLException {
+		Review review = null;
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_REVIEW_BY_NO_SQL);
+		pstmt.setInt(1, reviewNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			review = new Review();
+			review.setNo(rs.getInt("review_no"));
+			review.setBookNo(rs.getInt("book_no"));
+			review.setUserNo(rs.getInt("user_no"));
+			review.setTitle(rs.getString("review_title"));
+			review.setContent(rs.getString("review_content"));
+			review.setPoint(rs.getInt("review_point"));
+			review.setLikeCount(rs.getInt("review_like_count"));
+			review.setCreatedDate(rs.getDate("review_created_date"));
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return review;
+	}
+	
+	public ReviewLikeUser getReviewLikeUserByNo(int userNo, int reviewNo) throws SQLException {
+		ReviewLikeUser reviewLikeUser = null;
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_REVIEW_LIKE_USER_BY_NO_SQL);
+		pstmt.setInt(1, userNo);
+		pstmt.setInt(2, reviewNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			reviewLikeUser = new ReviewLikeUser();
+			reviewLikeUser.setUserNo(userNo);
+			reviewLikeUser.setReviewNo(reviewNo);
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return reviewLikeUser;
 	}
 	
 	public List<ReviewDto> getReviewDtosByBookNoAndRange(int begin, int end, int bookNo) throws SQLException {
@@ -97,6 +150,43 @@ public class ReviewDao {
 		pstmt.setString(3, review.getTitle());
 		pstmt.setString(4, review.getContent());
 		pstmt.setInt(5, review.getPoint());
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		con.close();
+	}
+	
+	
+	public void insertReviewLikeUser(int userNo, int reviewNo) throws SQLException {
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(INSERT_REVIEW_LIKE_USER_SQL);
+		pstmt.setInt(1, userNo);
+		pstmt.setInt(2, reviewNo);
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		con.close();
+	}
+	
+	public void updateReview(Review review) throws SQLException {
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(UPDATE_REVIEW_SQL);
+		pstmt.setString(1, review.getTitle());
+		pstmt.setString(2, review.getContent());
+		pstmt.setInt(3, review.getPoint());
+		pstmt.setInt(4, review.getLikeCount());
+		pstmt.setInt(5, review.getNo());
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		con.close();
+	}
+	
+	public void deleteReviewLikeUser(int userNo, int reviewNo) throws SQLException {
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(DELETE_REVIEW_LIKE_USER_SQL);
+		pstmt.setInt(1, userNo);
+		pstmt.setInt(2, reviewNo);
 		pstmt.executeUpdate();
 		
 		pstmt.close();

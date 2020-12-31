@@ -17,9 +17,15 @@ public class BookDao {
 	private static final String GET_TOTAL_RECORDS_BY_CATEGORYTYPE_SQL = "select count(*) cnt from shop_books a, shop_book_categories b where a.category_no = b.category_no and b.category_type = ?";
 	private static final String GET_BOOK_BY_NO_SQL = "select * from shop_books where book_no = ?";
 	private static final String GET_FOUR_NEW_BOOKS_SQL = "select *"
-													   + " from (select row_number() over (order by a.book_created_date desc) rn, a.*"
+													   + " from (select row_number() over (order by a.book_created_date desc, a.book_no desc) rn, a.*"
 													   + "		 from shop_books a)"
 													   + " where rn <= 4";
+	private static final String GET_FOUR_BEST_BOOKS_SQL = "select *"
+													    + " from (select row_number() over (order by a.book_created_date asc, a.book_no asc) rn, a.*"
+													    + "		 from shop_books a"
+													    + "		 where a.book_best = 'Y')"
+													    + " where rn <= 4";
+	
 	private static final String GET_BOOKDTO_BY_NO_SQL = "select a.* , b.category_name, b.category_type"
 													  + " from shop_books a, shop_book_categories b"
 													  + " where a.book_no = ?";
@@ -135,6 +141,41 @@ public class BookDao {
 	}
 	
 	public List<Book> getFourNewBooks() throws SQLException {
+		List<Book> books = new ArrayList<Book>();
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_FOUR_BEST_BOOKS_SQL);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			Book book = new Book();
+			book.setNo(rs.getInt("book_no"));
+			book.setCategoryNo(rs.getInt("category_no"));
+			book.setTitle(rs.getString("book_title"));
+			book.setWriter(rs.getString("book_writer"));
+			book.setTranslator(rs.getString("book_translator"));
+			book.setPublisher(rs.getString("book_publisher"));
+			book.setPublishedDate(rs.getDate("book_pub_date"));
+			book.setPrice(rs.getInt("book_price"));
+			book.setDiscountPrice(rs.getInt("book_discount_price"));
+			book.setDiscountRate(rs.getDouble("book_discount_rate"));
+			book.setPoint(rs.getInt("book_point"));
+			book.setPointRate(rs.getDouble("book_point_rate"));
+			book.setStock(rs.getInt("book_stock"));
+			book.setStatus(rs.getString("book_status"));
+			book.setReviewCount(rs.getInt("book_review_count"));
+			book.setReviewPoint(rs.getDouble("book_review_point"));
+			book.setBest(rs.getString("book_best"));
+			book.setFileName(rs.getString("book_filename"));
+			book.setCreatedDate(rs.getDate("book_created_date"));
+			
+			books.add(book);
+		}
+		
+		return books;
+	}
+	
+	public List<Book> getFourBestBooks() throws SQLException {
 		List<Book> books = new ArrayList<Book>();
 		
 		Connection con = ConnectionUtil.getConnection();
