@@ -21,8 +21,7 @@
 	
  	// 바로구매했을 경우 책 번호와 가격, 구매수량에 사용할 것임(물론 장바구니에서 구매했을때는 form.jsp에서
 	// 넘겨준  cartItemDtos 리스트의 첫번째 객체의 bookno와 책가격, amount 가 들어있음)
-	int bookNo = StringUtils.stringToInt(request.getParameter("bookno"));
- 	int price = StringUtils.stringToInt(request.getParameter("price"));
+	int bookNo = StringUtils.stringToInt(request.getParameter("bookno"), 0);
 	int amount = StringUtils.stringToInt(request.getParameter("amount"));
 	
 	String recName = request.getParameter("name");
@@ -57,18 +56,19 @@
 	order.setBankCardAccount(bankCardAccount);
 	orderDao.insertOrder(order);
 	
-	// 바로구매했을 경우 cartItemNo[0]에는 "0"이 들어감
-	if ("0".equals(cartItemNo[0])) {
+	// 바로구매했을 경우 bookNo에 0이 아닌 값이 들어감
+	if (bookNo != 0) {
 		// 주문아이템 테이블에 저장
+		BookDao bookDao = BookDao.getInstance();
+		Book book = bookDao.getBookByNo(bookNo);
+		
 		OrderItem orderItem = new OrderItem();
 		orderItem.setOrderNo(orderNo);
 		orderItem.setBookNo(bookNo);
-		orderItem.setPrice(price);
+		orderItem.setPrice(book.getDiscountPrice());
 		orderItem.setAmount(amount);
 		orderDao.insertOrderItem(orderItem);
 		// 구매한 수량만큼 책 재고 변경
-		BookDao bookDao = BookDao.getInstance();
-		Book book = bookDao.getBookByNo(bookNo);
 		book.setStock(book.getStock() - amount);
 		bookDao.updateBook(book);
 	} else {

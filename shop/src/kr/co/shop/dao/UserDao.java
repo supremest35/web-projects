@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 import kr.co.shop.util.ConnectionUtil;
 import kr.co.shop.vo.User;
@@ -15,6 +17,7 @@ public class UserDao {
 	private static final String GET_USER_BY_USERNO_SQL = "select * from shop_users where user_no = ?";
 	private static final String GET_USER_BY_USERID_SQL = "select * from shop_users where user_id = ?";
 	private static final String GET_POINT_HISTORY_BY_ORDERNO_SQL = "select * from shop_user_point_history where order_no = ?";
+	private static final String GET_POINT_HISTORIES_BY_USER_NO_SQL = "select * from shop_user_point_history where user_no = ?";
 	private static final String INSERT_USER_SQL = "insert into shop_users(user_no, user_id, user_password, user_name, user_tel, user_email)"
 												+ " values(shop_user_no_seq.nextval, ?, ?, ?, ?, ?)";
 	private static final String INSERT_POINT_HISTORY_SQL = "insert into shop_user_point_history(history_no, user_no, history_content, order_no, history_point_amount)"
@@ -107,6 +110,31 @@ public class UserDao {
 		pstmt.close();
 		con.close();
 		return userPointHistory;
+	}
+	
+	public List<UserPointHistory> getPointHistoriesByUserNo(int userNo) throws SQLException {
+		List<UserPointHistory> userPointHistories = new ArrayList<UserPointHistory>();
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_POINT_HISTORIES_BY_USER_NO_SQL);
+		pstmt.setInt(1, userNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			UserPointHistory userPointHistory = new UserPointHistory();
+			userPointHistory.setNo(rs.getInt("history_no"));
+			userPointHistory.setUserNo(rs.getInt("user_no"));
+			userPointHistory.setContent(rs.getString("history_content"));
+			userPointHistory.setOrderNo(rs.getInt("order_no"));
+			userPointHistory.setAmount(rs.getInt("history_point_amount"));
+			userPointHistory.setCreatedDate(rs.getDate("history_created_date"));
+			userPointHistories.add(userPointHistory);
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return userPointHistories;
 	}
 	
 	public void insertUser(User user) throws SQLException {

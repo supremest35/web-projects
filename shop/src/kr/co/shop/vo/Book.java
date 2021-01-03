@@ -21,6 +21,7 @@ public class Book {
 	private int reviewCount;
 	private double reviewPoint;
 	private String best;
+	private String freeDelivery;
 	private String fileName;
 	private Date createdDate;
 	
@@ -152,6 +153,14 @@ public class Book {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	
+	public String getFreeDelivery() {
+		return freeDelivery;
+	}
+
+	public void setFreeDelivery(String freeDelivery) {
+		this.freeDelivery = freeDelivery;
 	}
 
 	public String getBest() {

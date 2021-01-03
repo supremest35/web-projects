@@ -85,9 +85,8 @@
 	<form method="post" action="insert.jsp">
 		<!-- 주문 상품 정보 시작 -->
 		<!-- 바로구매 눌렀을 때 책 번호, 가격, 구매수량 넘겨주기  -->
-		<input type="hidden" name="bookno" value="<%=cartItemDtos.get(0).getBook().getNo() %>" />
-		<input type="hidden" name="price" value="<%=cartItemDtos.get(0).getBook().getDiscountPrice() %>" />
-		<input type="hidden" name="amount" value="<%=cartItemDtos.get(0).getAmount() %>" />
+		<input type="hidden" name="bookno" value="<%=bookNo %>" />
+		<input type="hidden" name="amount" value="<%=amount %>" />
 		<div class="row mb-3">
 			<div class="col-12">
 				<div class="card">

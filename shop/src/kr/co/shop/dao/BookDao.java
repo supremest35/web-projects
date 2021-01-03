@@ -35,7 +35,7 @@ public class BookDao {
 													   					 + "		 where a.category_no = b.category_no"
 													   					 + "		 and b.category_type = ?)"
 													   					 + " where rn >= ? and rn <= ?";
-	private static final String UPDATE_BOOK_SQL = "update shop_books set book_price = ?, book_discount_price = ?, book_discount_rate = ?, book_point_rate = ?, book_status = ?, book_review_count = ?, book_review_point = ?, book_best = ?, book_stock= ?, book_point = ?"
+	private static final String UPDATE_BOOK_SQL = "update shop_books set book_price = ?, book_discount_price = ?, book_discount_rate = ?, book_point_rate = ?, book_status = ?, book_review_count = ?, book_review_point = ?, book_free_delivery = ?, book_best = ?, book_stock= ?, book_point = ?"
 												+ " where book_no = ?";
 	
 	private static final BookDao bookDao = new BookDao();
@@ -87,6 +87,7 @@ public class BookDao {
 			book.setStatus(rs.getString("book_status"));
 			book.setReviewCount(rs.getInt("book_review_count"));
 			book.setReviewPoint(rs.getDouble("book_review_point"));
+			book.setFreeDelivery(rs.getString("book_free_delivery"));
 			book.setBest(rs.getString("book_best"));
 			book.setFileName(rs.getString("book_filename"));
 			book.setCreatedDate(rs.getDate("book_created_date"));
@@ -123,6 +124,7 @@ public class BookDao {
 			bookDto.setStatus(rs.getString("book_status"));
 			bookDto.setReviewCount(rs.getInt("book_review_count"));
 			bookDto.setReviewPoint(rs.getDouble("book_review_point"));
+			bookDto.setFreeDelivery(rs.getString("book_free_delivery"));
 			bookDto.setBest(rs.getString("book_best"));
 			bookDto.setFileName(rs.getString("book_filename"));
 			bookDto.setCreatedDate(rs.getDate("book_created_date"));
@@ -165,6 +167,7 @@ public class BookDao {
 			book.setStatus(rs.getString("book_status"));
 			book.setReviewCount(rs.getInt("book_review_count"));
 			book.setReviewPoint(rs.getDouble("book_review_point"));
+			book.setFreeDelivery(rs.getString("book_free_delivery"));
 			book.setBest(rs.getString("book_best"));
 			book.setFileName(rs.getString("book_filename"));
 			book.setCreatedDate(rs.getDate("book_created_date"));
@@ -172,6 +175,9 @@ public class BookDao {
 			books.add(book);
 		}
 		
+		rs.close();
+		pstmt.close();
+		con.close();
 		return books;
 	}
 	
@@ -200,6 +206,7 @@ public class BookDao {
 			book.setStatus(rs.getString("book_status"));
 			book.setReviewCount(rs.getInt("book_review_count"));
 			book.setReviewPoint(rs.getDouble("book_review_point"));
+			book.setFreeDelivery(rs.getString("book_free_delivery"));
 			book.setBest(rs.getString("book_best"));
 			book.setFileName(rs.getString("book_filename"));
 			book.setCreatedDate(rs.getDate("book_created_date"));
@@ -207,6 +214,9 @@ public class BookDao {
 			books.add(book);
 		}
 		
+		rs.close();
+		pstmt.close();
+		con.close();
 		return books;
 	}
 	
@@ -237,6 +247,7 @@ public class BookDao {
 			bookDto.setStatus(rs.getString("book_status"));
 			bookDto.setReviewCount(rs.getInt("book_review_count"));
 			bookDto.setReviewPoint(rs.getDouble("book_review_point"));
+			bookDto.setFreeDelivery(rs.getString("book_free_delivery"));
 			bookDto.setBest(rs.getString("book_best"));
 			bookDto.setFileName(rs.getString("book_filename"));
 			bookDto.setCreatedDate(rs.getDate("book_created_date"));
@@ -266,10 +277,11 @@ public class BookDao {
 		pstmt.setString(5, book.getStatus());
 		pstmt.setInt(6, book.getReviewCount());
 		pstmt.setDouble(7, book.getReviewPoint());
-		pstmt.setString(8, book.getBest());
-		pstmt.setInt(9, book.getStock());
-		pstmt.setInt(10, book.getPoint());
-		pstmt.setInt(11,  book.getNo());
+		pstmt.setString(8, book.getFreeDelivery());
+		pstmt.setString(9, book.getBest());
+		pstmt.setInt(10, book.getStock());
+		pstmt.setInt(11, book.getPoint());
+		pstmt.setInt(12,  book.getNo());
 		pstmt.executeUpdate();
 		
 		pstmt.close();

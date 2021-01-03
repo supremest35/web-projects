@@ -1,3 +1,9 @@
+<%@page import="kr.co.shop.dto.OrderItemDto"%>
+<%@page import="kr.co.shop.vo.Order"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.shop.dao.OrderDao"%>
+<%@page import="kr.co.shop.vo.User"%>
+<%@page import="kr.co.shop.dao.UserDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,14 +32,63 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		String error = request.getParameter("error");
+	%>
   	<div class="row mb-3">
   		<div class="col-12">
 			<div class="alert alert-info text-center" style="font-size: 27px;">
-				<span><strong>홍길동</strong>님 즐겁고 행복한 하루 보내세요</span><br />
+				<span><strong><%=loginedUserName %></strong>님 즐겁고 행복한 하루 보내세요</span><br />
 			</div>
 		</div>
   	</div>
- 
+  	<%
+  		if ("blank".equals(error)) {
+  	%>
+	  	<div class="row mb-3">
+			<div class="col-12">
+				<div class="alert alert-danger">
+						<strong>오류</strong> 비밀번호는 필수 입력값입니다.
+				</div>
+			</div>
+		</div>
+	<%
+  		} else if ("invalid".equals(error)) {
+	%>
+	  	<div class="row mb-3">
+			<div class="col-12">
+				<div class="alert alert-danger">
+						<strong>오류</strong> 이전 비밀번호가 일치하지 않습니다.
+				</div>
+			</div>
+		</div>
+	<%
+  		} else if ("pwd".equals(error)) {
+	%>
+	  	<div class="row mb-3">
+			<div class="col-12">
+				<div class="alert alert-danger">
+						<strong>오류</strong> 새 비밀번호와 새 비밀번호 확인값은 일치해야합니다.
+				</div>
+			</div>
+		</div>
+	<%
+  		} else if ("dupPwd".equals(error)) {
+	%>
+	  	<div class="row mb-3">
+			<div class="col-12">
+				<div class="alert alert-danger">
+						<strong>오류</strong> 새 비밀번호와 이전 비밀번호가 일치합니다. 새로운 비밀번호를 설정해주세요.
+				</div>
+			</div>
+		</div>
+	<%
+  		}
+	%>	
+ 	<%
+ 		UserDao userDao = UserDao.getInstance();
+ 		User user = userDao.getUserByNo(loginedUserNo);
+ 	%>
  	<div class="row mb-3">
  		<div class="col-12">
  			<div class="card">
@@ -43,21 +98,21 @@
  						<tbody>
  							<tr>
  								<th>이름</th>
- 								<td>홍길동</td>
+ 								<td><%=loginedUserName %></td>
  								<th>적립 포인트</th>
- 								<td><span class="mr-5"><strong class="text-danger">50,000</strong> 원</span> <a href="pointhistory.jsp" class="btn btn-primary btn-xs">상세내용</a></td>
+ 								<td><span class="mr-5"><strong class="text-danger"><%=user.getPoint() %></strong> 원</span> <a href="pointhistory.jsp" class="btn btn-primary btn-xs">상세내용</a></td>
  							</tr>
  							<tr>
  								<th>아이디</th>
- 								<td>hong</td>
+ 								<td><%=loginedUserId %></td>
  								<th>비밀번호</th>
  								<td><button class="btn btn-outline-primary btn-xs" data-toggle="modal" data-target="#modal-password-form">비밀번호 변경</button></td>
  							</tr>
  							<tr>
  								<th>연락처</th>
- 								<td>010-1111-1111</td>
+ 								<td><%=user.getTel() %></td>
  								<th>이메일</th>
- 								<td>hong@gmail.com</td>
+ 								<td><%=user.getEmail() %></td>
  							</tr>
  						</tbody>
  					</table>
@@ -75,24 +130,25 @@
 							</tr>
 						</thead>
 						<tbody>
+						<%
+							OrderDao orderDao = OrderDao.getInstance();
+							List<Order> orders = orderDao.getOrdersByUserNo(loginedUserNo);
+							
+							for (Order order : orders) {
+								List<OrderItemDto> orderItemDtos = orderDao.getOrderItemDtosByOrderNo(order.getNo());
+						%>
 							<tr>
-								<td><a href="detail.jsp">100000410</a></td>
-								<td>2020-12-20</td>
-								<td><a href="detail.jsp">이것이 자바다 외 2종</a></td>
-								<td>45,000원/3</td>
-								<td><span class="text-success">결재완료</span></td>
-								<td>홍길동</td>
-								<td>홍길동</td>
+								<td><a href="../order/detail.jsp?orderno=<%=order.getNo() %>"><%=order.getNo() %></a></td>
+								<td><%=order.getCreatedDate() %></td>
+								<td><a href="../order/detail.jsp?orderno=<%=order.getNo() %>"><%=orderItemDtos.get(0).getBook().getTitle() %> 외 <%=order.getAmount() - 1 %>종</a></td>
+								<td><%=order.getTotalOrderPrice() %>원/<%=order.getAmount() %></td>
+								<td><span class="text-success"><%=order.getStatus() %></span></td>
+								<td><%=loginedUserName %></td>
+								<td><%=order.getRecName() %></td>
 							</tr>
-							<tr>
-								<td><a href="detail.jsp">100000410</a></td>
-								<td>2020-12-20</td>
-								<td><a href="detail.jsp">이것이 자바다 외 2종</a></td>
-								<td>45,000원/3</td>
-								<td><span class="text-success">결재완료</span></td>
-								<td>홍길동</td>
-								<td>홍길동</td>
-							</tr>
+						<%
+							}
+						%>
 						</tbody>
 					</table>
  				</div>

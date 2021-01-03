@@ -1,3 +1,7 @@
+<%@page import="kr.co.shop.vo.UserPointHistory"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.shop.vo.User"%>
+<%@page import="kr.co.shop.dao.UserDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,11 +30,15 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
+	<%
+		UserDao userDao = UserDao.getInstance();
+		User user = userDao.getUserByNo(loginedUserNo);
+	%>
   	<div class="row mb-3">
   		<div class="col-12">
 			<div class="alert alert-info text-center" style="font-size: 27px;">
-				<span><strong>홍길동</strong>님의 포인트 내역입니다..</span><br />
-				<span class="mt-2 small">현재 포인트 적립액 : 53,000원</span>
+				<span><strong><%=loginedUserName %></strong>님의 포인트 내역입니다..</span><br />
+				<span class="mt-2 small">현재 포인트 적립액 : <%=user.getPoint() %>원</span>
 			</div>
 		</div>
   	</div>
@@ -56,18 +64,19 @@
 							</tr>
 						</thead>
 						<tbody>
+						<%
+							List<UserPointHistory> userPointHistories = userDao.getPointHistoriesByUserNo(loginedUserNo);
+							for (UserPointHistory userPointHistory : userPointHistories) {
+						%>
 							<tr>
-								<td>2020-12-20</td>
-								<td>주문에의한 포인트 적립</td>
-								<td>1000001</td>
-								<td class="text-right pr-5"><strong class="text-warning">300</strong> 원</td>
+								<td><%=userPointHistory.getCreatedDate() %></td>
+								<td><%=userPointHistory.getContent() %></td>
+								<td><%=userPointHistory.getOrderNo() == 0 ? "" : userPointHistory.getOrderNo() %></td>
+								<td class="text-right pr-5"><strong class="text-warning"><%=userPointHistory.getAmount() %></strong> 원</td>
 							</tr>
-							<tr>
-								<td>2020-12-20</td>
-								<td>주문시 포인트 사용</td>
-								<td>1000002</td>
-								<td class="text-right pr-5"><strong class="text-warning">-3000</strong> 원</td>
-							</tr>
+						<%
+							}
+						%>
 						</tbody>
 					</table>
  				</div>

@@ -176,6 +176,7 @@ public class OrderDao {
 			book.setStatus(rs.getString("book_status"));
 			book.setReviewCount(rs.getInt("book_review_count"));
 			book.setReviewPoint(rs.getDouble("book_review_point"));
+			book.setFreeDelivery(rs.getString("book_free_delivery"));
 			book.setBest(rs.getString("book_best"));
 			book.setFileName(rs.getString("book_filename"));
 			book.setCreatedDate(rs.getDate("book_created_date"));
