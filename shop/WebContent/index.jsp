@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.shop.vo.Book"%>
 <%@page import="kr.co.shop.dao.BookDao"%>
@@ -51,12 +52,33 @@
 	   									<small><%=book.getPoint() %>원 적립</small>
 	   								</div>
 	   								<div class="mt-3">
+	   								<%
+	   									if ("Y".equals(book.getFreeDelivery())) {
+	   								%>
 	   									<!-- 상품 테이블의 무료 배송 여부가 Y일 때 표시 -->
 	   									<span class="badge badge-primary">무료배송</span>
+	   								<%
+	   									}
+	   									
+	   									Date now = new Date();
+	   									long nowUnixTime = now.getTime();
+	   									long createdDateUnixTime = book.getCreatedDate().getTime();
+	   									
+	   									long days = (nowUnixTime - createdDateUnixTime) / (24*60*60*1000);
+	   									
+	   									if (days <= 7) {
+	   								%>
 	   									<!-- 등록일 기준 7일 이내 상품인 경우 표시 -->
 	   									<span class="badge badge-success">새 상품</span>
+	   								<%
+	   									}
+	   									if ("Y".equals(book.getBest())) {
+	   								%>	
 	   									<!-- 상품 테이블의 베스트셀러 여부가 Y일 때 표시 -->
 	   									<span class="badge badge-info">베스트셀러</span>
+									<%
+	   									}
+									%>
 	   								</div>
 								</div>
 							</div>		
@@ -102,12 +124,33 @@
 	   									<small><%=book.getPoint() %>원 적립</small>
 	   								</div>
 	   								<div class="mt-3">
+	   								<%
+	   									if ("Y".equals(book.getFreeDelivery())) {
+	   								%>
 	   									<!-- 상품 테이블의 무료 배송 여부가 Y일 때 표시 -->
 	   									<span class="badge badge-primary">무료배송</span>
+	   								<%
+	   									}
+	   									
+	   									Date now = new Date();
+	   									long nowUnixTime = now.getTime();
+	   									long createdDateUnixTime = book.getCreatedDate().getTime();
+	   									
+	   									long days = (nowUnixTime - createdDateUnixTime) / (24*60*60*1000);
+	   									
+	   									if (days <= 7) {
+	   								%>
 	   									<!-- 등록일 기준 7일 이내 상품인 경우 표시 -->
 	   									<span class="badge badge-success">새 상품</span>
+	   								<%
+	   									}
+	   									if ("Y".equals(book.getBest())) {
+	   								%>	
 	   									<!-- 상품 테이블의 베스트셀러 여부가 Y일 때 표시 -->
 	   									<span class="badge badge-info">베스트셀러</span>
+									<%
+	   									}
+									%>
 	   								</div>
 								</div>
 							</div>		

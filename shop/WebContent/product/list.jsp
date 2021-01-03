@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="kr.co.shop.dao.CategoryDao"%>
 <%@page import="kr.co.shop.vo.Category"%>
 <%@page import="kr.co.shop.dto.BookDto"%>
@@ -65,9 +66,33 @@
 	   									<small><%=bookDto.getPoint() %>원 적립</small>
 	   								</div>
 	   								<div class="mt-3">
-	   									<span class="badge badge-primary">무료배송</span>
-	   									<span class="badge badge-success">새 상품</span>
-	   									<span class="badge badge-info">베스트셀러</span>
+		   								<%
+		   									if ("Y".equals(bookDto.getFreeDelivery())) {
+		   								%>
+		   									<!-- 상품 테이블의 무료 배송 여부가 Y일 때 표시 -->
+		   									<span class="badge badge-primary">무료배송</span>
+		   								<%
+		   									}
+		   									
+		   									Date now = new Date();
+		   									long nowUnixTime = now.getTime();
+		   									long createdDateUnixTime = bookDto.getCreatedDate().getTime();
+		   									
+		   									long days = (nowUnixTime - createdDateUnixTime) / (24*60*60*1000);
+		   									
+		   									if (days <= 7) {
+		   								%>
+		   									<!-- 등록일 기준 7일 이내 상품인 경우 표시 -->
+		   									<span class="badge badge-success">새 상품</span>
+		   								<%
+		   									}
+		   									if ("Y".equals(bookDto.getBest())) {
+		   								%>	
+		   									<!-- 상품 테이블의 베스트셀러 여부가 Y일 때 표시 -->
+		   									<span class="badge badge-info">베스트셀러</span>
+										<%
+		   									}
+										%>
 	   								</div>
 								</div>
 							</div>		
