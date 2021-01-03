@@ -17,6 +17,7 @@ public class OrderDao {
 
 	private static final String GET_ORDER_NO_SQL = "select shop_book_orders_no_seq.nextval as orderno from dual";
 	private static final String GET_ORDER_BY_NO_SQL = "select * from shop_book_orders where order_no = ?";
+	private static final String GET_ORDERS_BY_USER_NO_SQL = "select * from shop_book_orders where user_no = ?";
 	private static final String GET_ORDER_ITEMS_BY_ORDERNO_SQL = "select * from shop_book_order_items where order_no = ?";
 	private static final String GET_ORDER_ITEM_DTOS_BY_ORDERNO_SQL = "select a.*, b.*"
 																   + " from shop_book_order_items a, shop_books b"
@@ -26,6 +27,8 @@ public class OrderDao {
 												 + " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_ORDER_ITEM_SQL = "insert into shop_book_order_items(order_item_no, order_no, book_no, item_price, order_item_amount)"
 													  + " values(shop_book_order_items_no_seq.nextval, ?, ?, ?, ?)";
+	private static final String UPDATE_ORDER_SQL = "update shop_book_orders set order_recipient_name = ?, order_recipient_tel = ?, order_recipient_zipcode = ?, order_recipient_address = ?, order_message = ?, order_status = ? "
+												 + " where order_no = ?";
 	
 	private static final OrderDao orderDao = new OrderDao();
 	private OrderDao() {}
@@ -80,6 +83,41 @@ public class OrderDao {
 		pstmt.close();
 		con.close();
 		return order;
+	}
+	
+	public List<Order> getOrdersByUserNo(int userNo) throws SQLException {
+		List<Order> orders = new ArrayList<Order>();
+		
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(GET_ORDERS_BY_USER_NO_SQL);
+		pstmt.setInt(1, userNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			Order order = new Order();
+			order.setNo(rs.getInt("order_no"));
+			order.setUserNo(rs.getInt("user_no"));
+			order.setAmount(rs.getInt("order_amount"));
+			order.setStatus(rs.getString("order_status"));
+			order.setRecName(rs.getString("order_recipient_name"));
+			order.setRecTel(rs.getString("order_recipient_tel"));
+			order.setRecZipCode(rs.getString("order_recipient_zipcode"));
+			order.setRecAddress(rs.getString("order_recipient_address"));
+			order.setMessage(rs.getString("order_message"));
+			order.setTotalOrderPrice(rs.getInt("total_order_price"));
+			order.setUsedPoint(rs.getInt("used_point_amount"));
+			order.setTotalPaymentPrice(rs.getInt("total_payment_price"));
+			order.setBankNo(rs.getInt("bank_no"));
+			order.setBankCardAccount(rs.getString("bank_card_account"));
+			order.setCreatedDate(rs.getDate("order_created_date"));
+			
+			orders.add(order);
+		}
+		
+		rs.close();
+		pstmt.close();
+		con.close();
+		return orders;
 	}
 	
 	public List<OrderItem> getOrderItemsByOrderNo(int orderNo) throws SQLException {
@@ -183,6 +221,22 @@ public class OrderDao {
 		pstmt.setInt(2, orderItem.getBookNo());
 		pstmt.setInt(3, orderItem.getPrice());
 		pstmt.setInt(4, orderItem.getAmount());
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		con.close();
+	}
+	
+	public void updateOrder(Order order) throws SQLException {
+		Connection con = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = con.prepareStatement(UPDATE_ORDER_SQL);
+		pstmt.setString(1, order.getRecName());
+		pstmt.setString(2, order.getRecTel());
+		pstmt.setString(3, order.getRecZipCode());
+		pstmt.setString(4, order.getRecAddress());
+		pstmt.setString(5, order.getMessage());
+		pstmt.setString(6, order.getStatus());
+		pstmt.setInt(7, order.getNo());
 		pstmt.executeUpdate();
 		
 		pstmt.close();

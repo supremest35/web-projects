@@ -1,3 +1,9 @@
+<%@page import="kr.co.shop.vo.UserPointHistory"%>
+<%@page import="kr.co.shop.dao.UserDao"%>
+<%@page import="kr.co.shop.dto.OrderItemDto"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.shop.vo.Order"%>
+<%@page import="kr.co.shop.dao.OrderDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,7 +32,16 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
-	
+	<%
+		int orderNo = StringUtils.stringToInt(request.getParameter("orderno"));
+		
+		OrderDao orderDao = OrderDao.getInstance();
+		Order order = orderDao.getOrderByNo(orderNo);
+		List<OrderItemDto> orderItemDtos = orderDao.getOrderItemDtosByOrderNo(orderNo);
+		
+		UserDao userDao = UserDao.getInstance();
+		UserPointHistory userPointHistory = userDao.getPointHistoryByOrderNo(orderNo);
+	%>
 	<!-- 주문 상품 정보 시작 -->
 	<div class="row mb-3">
 		<div class="col-12">
@@ -42,26 +57,34 @@
 						</colgroup>
 						<tbody>
 							<tr>	
-								<th>주문번호</th><td><strong>10000001</strong></td>
-								<th>주문상태</th><td>결재완료 <a href="cancel.jsp?orderno=10000001" class="btn btn-danger btn-xs float-right">주문취소</a></td><!-- 주문취소 버튼은 결재완료 상태일 때만 표시됨 -->
+								<th>주문번호</th><td><strong><%=order.getNo() %></strong></td>
+								<th>주문상태</th><td><%=order.getStatus() %> 
+								<%
+									if ("결재완료".equals(order.getStatus())) {
+								%>
+										<a href="cancel.jsp?orderno=<%=orderNo %>" class="btn btn-danger btn-xs float-right">주문취소</a>
+								<%
+									}
+								%>
+								</td><!-- 주문취소 버튼은 결재완료 상태일 때만 표시됨 -->
 							</tr>
 							<tr>
-								<th>주문일자</th><td>2020-12-22</td>
-								<th>주문하신 분</th><td>홍길동</td>
+								<th>주문일자</th><td><%=order.getCreatedDate() %></td>
+								<th>주문하신 분</th><td><%=loginedUserName %></td>
 							</tr>
 							<tr>
-								<th>받으시는 분</th><td>김유신</td>
-								<th>받으시는 분 연락처</th><td>010-1111-2236</td>
+								<th>받으시는 분</th><td><%=order.getRecName() %></td>
+								<th>받으시는 분 연락처</th><td><%=order.getRecTel() %></td>
 							</tr>
 							<tr>
-								<th>주소</th><td colspan="3"> (12345) 서울 종로구 율곡로10길 105 디아망빌딩 4층</td>
+								<th>주소</th><td colspan="3"> (<%=order.getRecZipCode() %>) <%=order.getRecAddress() %></td>
 							</tr>
 							<tr>
-								<th>총 주문 금액</th><td colspan="3"><strong>45,000</strong>원</td>
+								<th>총 주문 금액</th><td colspan="3"><strong><%=order.getTotalOrderPrice() %></strong>원</td>
 							</tr>
 							<tr>
-								<th>결재금액</th><td><strong class="text-danger">40,000</strong>원 (포인트: <span class="text-primary">5,000</span>원 사용)</td>
-								<th>포인트 적립액</th><td><strong class="text-danger">900</strong>원</td>
+								<th>결재금액</th><td><strong class="text-danger"><%=order.getTotalPaymentPrice() %></strong>원 (포인트: <span class="text-primary"><%=order.getUsedPoint() %></span>원 사용)</td>
+								<th>포인트 적립액</th><td><strong class="text-danger"><%=userPointHistory.getAmount() %></strong>원</td>
 							</tr>
 							<tr>
 								<th>결재내용</th><td>카드결재 </td>
@@ -89,32 +112,25 @@
 							</tr>
 						</thead>
 						<tbody>
+						<%
+							for (OrderItemDto orderItemDto : orderItemDtos) {
+						%>
 							<tr>
 								<td>
-									<img src="../resources/images/book.jpg" width="60px" height="88px" />
-									<span class="align-top"><a href="detail.jsp" class="text-body">불안한 마음을 잠재우는 방법</a></span>
+									<img src="../resources/images/<%=orderItemDto.getBook().getFileName() %>.jpg" width="60px" height="88px" />
+									<span class="align-top"><a href="../product/detail.jsp?bookno=<%=orderItemDto.getBook().getNo() %>" class="text-body"><%=orderItemDto.getBook().getTitle() %></a></span>
 								</td>
-								<td>10,000원</td>
+								<td><%=orderItemDto.getBook().getPrice() %>원</td>
 								<td>
-									9,000원<br/>
-									<small>(500원 적립)</small>
+									<%=orderItemDto.getBook().getDiscountPrice() %>원<br/>
+									<small>(<%=orderItemDto.getBook().getPoint() %>원 적립)</small>
 								</td>
-								<td>1</td>
-								<td><strong>9,000원</strong></td>
+								<td><%=orderItemDto.getAmount() %></td>
+								<td><strong><%=orderItemDto.getPrice() %>원</strong></td>
 							</tr>
-							<tr>
-								<td>
-									<img src="../resources/images/book.jpg" width="60px" height="88px" />
-									<span class="align-top"><a href="detail.jsp" class="text-body">불안한 마음을 잠재우는 방법</a></span>
-								</td>
-								<td>10,000원</td>
-								<td>
-									9,000원<br/>
-									<small>(500원 적립)</small>
-								</td>
-								<td>1</td>
-								<td><strong>9,000원</strong></td>
-							</tr>
+						<%
+							}
+						%>
 						</tbody>
 					</table>
 				</div>

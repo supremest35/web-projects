@@ -41,7 +41,6 @@
 	// 주문테이블에 주문정보 저장
 	OrderDao orderDao = OrderDao.getInstance();
 	int orderNo = orderDao.getOrderNo();
-	System.out.println("인서트jsp : " + orderNo);
 	Order order = new Order();
 	order.setNo(orderNo);
 	order.setUserNo(loginedUserNo);
@@ -66,7 +65,6 @@
 		orderItem.setBookNo(bookNo);
 		orderItem.setPrice(price);
 		orderItem.setAmount(amount);
-		System.out.println("바로구매 : " + orderNo);
 		orderDao.insertOrderItem(orderItem);
 		// 구매한 수량만큼 책 재고 변경
 		BookDao bookDao = BookDao.getInstance();
@@ -78,7 +76,6 @@
 			int cartNo = Integer.parseInt(num);
 			CartDao cartDao = CartDao.getInstance();
 			CartItemDto cartItemDto = cartDao.getCartItemDtoByNo(cartNo);
-			System.out.println("장바구니구매인서트 : " + orderNo);
 			// 주문아이템 테이블에 저장
 			OrderItem orderItem = new OrderItem();
 			orderItem.setOrderNo(orderNo);
@@ -107,7 +104,7 @@
 		userDao.updateUser(user);
 
 		userPointHistory.setContent("책 구매(포인트 사용)");
-		userPointHistory.setAmount(amount);
+		userPointHistory.setAmount(usedPoint * -1);
 		userDao.insertPointHistory(userPointHistory);
 	}
 	

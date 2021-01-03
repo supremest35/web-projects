@@ -1,3 +1,8 @@
+<%@page import="kr.co.shop.dto.OrderItemDto"%>
+<%@page import="kr.co.shop.vo.OrderItem"%>
+<%@page import="kr.co.shop.vo.Order"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.shop.dao.OrderDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,7 +31,10 @@
 			<%@ include file="../common/navbar.jsp" %>
 		</div>
 	</div>
-	
+	<%
+		OrderDao orderDao = OrderDao.getInstance();
+		List<Order> orders = orderDao.getOrdersByUserNo(loginedUserNo);
+	%>
 	<!-- 주문 내역 시작 -->
 	<div class="row mb-3">
 		<div class="col-12">
@@ -46,33 +54,22 @@
 							</tr>
 						</thead>
 						<tbody>
+						<%
+							for (Order order : orders) {
+							List<OrderItemDto> orderItemDtos = orderDao.getOrderItemDtosByOrderNo(order.getNo()); 
+						%>
 							<tr>
-								<td><a href="detail.jsp">100000410</a></td>
-								<td>2020-12-20</td>
-								<td><a href="detail.jsp">이것이 자바다 외 2종</a></td>
-								<td>45,000원/3</td>
-								<td><span class="text-success">결재완료</span></td>
-								<td>홍길동</td>
-								<td>홍길동</td>
+								<td><a href="detail.jsp?orderno=<%=order.getNo() %>"><%=order.getNo() %></a></td>
+								<td><%=order.getCreatedDate() %></td>
+								<td><a href="detail.jsp?orderno=<%=order.getNo() %>"><%=orderItemDtos.get(0).getBook().getTitle() %> 외 <%=order.getAmount() - 1 %>종</a></td>
+								<td><%=order.getTotalOrderPrice() %>원/<%=order.getAmount() %></td>
+								<td><span class="text-success"><%=order.getStatus() %></span></td>
+								<td><%=loginedUserName %></td>
+								<td><%=order.getRecName() %></td>
 							</tr>
-							<tr>
-								<td><a href="detail.jsp">100000410</a></td>
-								<td>2020-12-20</td>
-								<td><a href="detail.jsp">이것이 자바다 외 2종</a></td>
-								<td>45,000원/3</td>
-								<td><span class="text-success">결재완료</span></td>
-								<td>홍길동</td>
-								<td>홍길동</td>
-							</tr>
-							<tr>
-								<td><a href="detail.jsp">100000410</a></td>
-								<td>2020-12-20</td>
-								<td><a href="detail.jsp">이것이 자바다 외 2종</a></td>
-								<td>45,000원/3</td>
-								<td><span class="text-success">결재완료</span></td>
-								<td>홍길동</td>
-								<td>홍길동</td>
-							</tr>
+						<%
+							}
+						%>
 						</tbody>
 					</table>
 				</div>

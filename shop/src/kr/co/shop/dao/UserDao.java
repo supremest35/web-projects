@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import kr.co.shop.util.ConnectionUtil;
 import kr.co.shop.vo.User;
@@ -143,7 +144,11 @@ public class UserDao {
 		PreparedStatement pstmt = con.prepareStatement(INSERT_POINT_HISTORY_SQL);
 		pstmt.setInt(1, userPointHistory.getUserNo());
 		pstmt.setString(2, userPointHistory.getContent());
-		pstmt.setInt(3, userPointHistory.getOrderNo());
+		if (userPointHistory.getOrderNo() == 0) {
+			pstmt.setNull(3, Types.INTEGER);
+		} else {
+			pstmt.setInt(3, userPointHistory.getOrderNo());
+		}
 		pstmt.setInt(4, userPointHistory.getAmount());
 		pstmt.executeUpdate();
 

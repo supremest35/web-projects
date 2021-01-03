@@ -38,7 +38,7 @@
 		
 		UserDao userDao = UserDao.getInstance();
 		UserPointHistory userPointHistory = userDao.getPointHistoryByOrderNo(orderNo);
-		
+
 		OrderDao orderDao = OrderDao.getInstance();
 		Order order = orderDao.getOrderByNo(orderNo);
 		List<OrderItemDto> orderItemDtos = orderDao.getOrderItemDtosByOrderNo(orderNo);
