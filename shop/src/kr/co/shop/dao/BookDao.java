@@ -44,6 +44,12 @@ public class BookDao {
 		return bookDao;
 	}
 	
+	/**
+	 * 전달받은 카테고리타입에 해당되는 모든 레코드갯수 조회
+	 * @param categoryType 카테고리타입
+	 * @return 레코드갯수
+	 * @throws SQLException
+	 */
 	public int getTotalRecordsByCategoryType(int categoryType) throws SQLException {
 		int totalRecords = 0;
 		
@@ -61,6 +67,12 @@ public class BookDao {
 		return totalRecords;
 	}
 	
+	/**
+	 * 전달받은 책 번호로 책정보 조회
+	 * @param bookNo 책번호
+	 * @return 책정보
+	 * @throws SQLException
+	 */
 	public Book getBookByNo(int bookNo) throws SQLException {
 		Book book = null;
 		
@@ -99,6 +111,12 @@ public class BookDao {
 		return book;
 	}
 	
+	/**
+	 * 전달받은 책번호로 책 세부정보 조회
+	 * @param bookNo 책번호
+	 * @return 책 세부정보
+	 * @throws SQLException
+	 */
 	public BookDto getBookDtoByNo(int bookNo) throws SQLException {
 		BookDto bookDto = null;
 		
@@ -142,6 +160,11 @@ public class BookDao {
 		return bookDto;
 	}
 	
+	/**
+	 * 가장 최근에 등록된 책정보 4개 조회
+	 * @return 책정보 리스트
+	 * @throws SQLException
+	 */
 	public List<Book> getFourNewBooks() throws SQLException {
 		List<Book> books = new ArrayList<Book>();
 		
@@ -181,6 +204,11 @@ public class BookDao {
 		return books;
 	}
 	
+	/**
+	 * 베스트 셀러중 4개의 책정보 조회
+	 * @return 책정보 리스트 조회
+	 * @throws SQLException
+	 */
 	public List<Book> getFourBestBooks() throws SQLException {
 		List<Book> books = new ArrayList<Book>();
 		
@@ -220,6 +248,14 @@ public class BookDao {
 		return books;
 	}
 	
+	/**
+	 * 전달받은 카테고리 타입에 해당하고 범위에 해당하는 책 세부정보 리스트 조회
+	 * @param begin 시작점
+	 * @param end 끝점
+	 * @param categoryType 카테고리 타입
+	 * @return 책 세부정보 리스트
+	 * @throws SQLException
+	 */
 	public List<BookDto> getBooksByRangeAndCategoryType(int begin, int end, int categoryType) throws SQLException {
 		List<BookDto> bookDtos = new ArrayList<BookDto>();
 		
@@ -267,6 +303,11 @@ public class BookDao {
 		return bookDtos;
 	}
 	
+	/**
+	 * 전달받은 책정보로 데이터베이스의 책 정보 수정
+	 * @param book 책정보
+	 * @throws SQLException
+	 */
 	public void updateBook(Book book) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(UPDATE_BOOK_SQL);

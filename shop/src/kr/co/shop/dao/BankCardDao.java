@@ -20,6 +20,11 @@ public class BankCardDao {
 		return bankCardDao;
 	}
 	
+	/**
+	 * 전체 카드, 은행 정보 조회
+	 * @return 카드, 은행 정보 조회
+	 * @throws SQLException
+	 */
 	public List<BankCardCompany> getAllBankCardCompanies() throws SQLException {
 		List<BankCardCompany> bankCardCompanies = new ArrayList<BankCardCompany>();
 		

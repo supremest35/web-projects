@@ -36,6 +36,11 @@ public class OrderDao {
 		return orderDao;
 	}
 	
+	/**
+	 * 주문번호 시퀀스값을 조회한다.
+	 * @return 주문번호 시퀀스값
+	 * @throws SQLException
+	 */
 	public int getOrderNo() throws SQLException {
 		int orderNo = 0;
 		
@@ -52,6 +57,12 @@ public class OrderDao {
 		return orderNo;
 	}
 	
+	/**
+	 * 전달받은 주문번호로 주문정보를 조회한다.
+	 * @param orderNo 주문번호
+	 * @return 주문정보
+	 * @throws SQLException
+	 */
 	public Order getOrderByNo(int orderNo) throws SQLException {
 		Order order = null;
 		
@@ -85,6 +96,12 @@ public class OrderDao {
 		return order;
 	}
 	
+	/**
+	 * 전달받은 사용자번호로 주문정보리스트를 조회한다.
+	 * @param userNo 사용자번호
+	 * @return 주문정보리스트
+	 * @throws SQLException
+	 */
 	public List<Order> getOrdersByUserNo(int userNo) throws SQLException {
 		List<Order> orders = new ArrayList<Order>();
 		
@@ -120,6 +137,12 @@ public class OrderDao {
 		return orders;
 	}
 	
+	/**
+	 * 전달받은 주문번호로 주문아이템리스트를 조회한다.
+	 * @param orderNo 주문번호
+	 * @return 주문아이템리스트
+	 * @throws SQLException
+	 */
 	public List<OrderItem> getOrderItemsByOrderNo(int orderNo) throws SQLException {
 		List<OrderItem> orderItems = new ArrayList<OrderItem>();
 		
@@ -144,6 +167,12 @@ public class OrderDao {
 		return orderItems;
 	}
 	
+	/**
+	 * 전달받은 주문번호로 주문아이템상세정보 리스트를 조회한다.
+	 * @param orderNo 주문번호
+	 * @return 주문아이템상세정보 리스트
+	 * @throws SQLException
+	 */
 	public List<OrderItemDto> getOrderItemDtosByOrderNo(int orderNo) throws SQLException {
 		List<OrderItemDto> orderItemDtos = new ArrayList<OrderItemDto>();
 		
@@ -191,6 +220,11 @@ public class OrderDao {
 		return orderItemDtos;
 	}
 	
+	/**
+	 * 전달받은 주문정보를 데이터베이스에 저장한다.
+	 * @param order 주문정보
+	 * @throws SQLException
+	 */
 	public void insertOrder(Order order) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(INSERT_ORDER_SQL);
@@ -213,7 +247,12 @@ public class OrderDao {
 		pstmt.close();
 		con.close();
 	}
-	
+
+	/**
+	 * 전달받은 주문아이템을 데이터베이스에 저장한다.
+	 * @param orderItem 주문아이템
+	 * @throws SQLException
+	 */
 	public void insertOrderItem(OrderItem orderItem) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(INSERT_ORDER_ITEM_SQL);
@@ -228,6 +267,11 @@ public class OrderDao {
 		con.close();
 	}
 	
+	/**
+	 * 전달받은 주문정보로 데이터베이스의 주문정보를 수정한다.
+	 * @param order 주문정보
+	 * @throws SQLException
+	 */
 	public void updateOrder(Order order) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(UPDATE_ORDER_SQL);

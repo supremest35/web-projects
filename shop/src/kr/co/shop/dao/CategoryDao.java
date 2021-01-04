@@ -18,6 +18,12 @@ public class CategoryDao {
 		return categoryDao;
 	}
 	
+	/**
+	 * 전달받은 카테고리번호로 카테고리정보를 조회한다.
+	 * @param categoryNo 카테고리번호
+	 * @return 카테고리정보
+	 * @throws SQLException
+	 */
 	public Category getCategoryByNo(int categoryNo) throws SQLException {
 		Category category = null;
 		

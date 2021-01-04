@@ -47,6 +47,12 @@ public class CartDao {
 		return cartDao;
 	}
 	
+	/**
+	 * 전달받은 장바구니번호로 장바구니아이템 조회
+	 * @param cartNo 장바구니번호
+	 * @return 장바구니아이템정보
+	 * @throws SQLException
+	 */
 	public CartItem getCartItemByNo(int cartNo) throws SQLException {
 		CartItem cartItem = null;
 		
@@ -70,6 +76,12 @@ public class CartDao {
 		return cartItem;
 	}
 	
+	/**
+	 * 전달받은 장바구니 번호로 장바구니 아이템 상세정보 조회
+	 * @param cartNo 장바구니번호
+	 * @return 장바구니 아이템 상세정보
+	 * @throws SQLException
+	 */
 	public CartItemDto getCartItemDtoByNo(int cartNo) throws SQLException {
 		CartItemDto cartItemDto = null;
 		
@@ -120,7 +132,13 @@ public class CartDao {
 		return cartItemDto;
 	}
 
-
+	/**
+	 * 전달받은 책번호와 사용자번호로 장바구니 아이템정보 조회
+	 * @param bookNo 책번호
+	 * @param userNo 사용자번호
+	 * @return 장바구니 아이템정보
+	 * @throws SQLException
+	 */
 	public CartItem getCartItemByBookNoAndUserNo(int bookNo, int userNo) throws SQLException {
 		CartItem cartItem = null;
 		
@@ -145,6 +163,13 @@ public class CartDao {
 		return cartItem;
 	}
 	
+	/**
+	 * 전달받은 책번호와 사용자번호로 장바구니 아이템 상세정보 조회
+	 * @param bookNo 책번호
+	 * @param userNo 사용자번호
+	 * @return 장바구니 아이템 상세정보
+	 * @throws SQLException
+	 */
 	public CartItemDto getCartItemDtoByBookNoAndUserNo(int bookNo, int userNo) throws SQLException {
 		CartItemDto cartItemDto = null;
 		
@@ -196,6 +221,12 @@ public class CartDao {
 		return cartItemDto;
 	}
 	
+	/**
+	 * 전달받은 사용자번호로 장바구니아이템 목록 조회
+	 * @param userNo 사용자번호
+	 * @return 장바구니아이템 목록
+	 * @throws SQLException
+	 */
 	public List<CartItem> getCartItemsByUserNo(int userNo)	throws SQLException {
 		List<CartItem> cartItems = new ArrayList<CartItem>();
 		
@@ -221,6 +252,12 @@ public class CartDao {
 		return cartItems;
 	}
 	
+	/**
+	 * 전달받은 사용자번호로 장바구니아이템 상세정보 목록 조회
+	 * @param userNo 사용자번호
+	 * @return 장바구니아이템 상세정보 목록
+	 * @throws SQLException
+	 */
 	public List<CartItemDto> getCartItemDtosByUserNo(int userNo) throws SQLException {
 		List<CartItemDto> cartItemDtos = new ArrayList<CartItemDto>();
 		
@@ -272,6 +309,11 @@ public class CartDao {
 		return cartItemDtos;
 	}
 	
+	/**
+	 * 전달받은 장바구니 아이템정보를 데이터베이스에 저장
+	 * @param cartItem 장바구니 아이템정보
+	 * @throws SQLException
+	 */
 	public void insertCartItem(CartItem cartItem) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(INSERT_CARTITEM_SQL);
@@ -284,6 +326,11 @@ public class CartDao {
 		con.close();
 	}
 	
+	/**
+	 * 전달받은 장바구니 아이템정보로 데이터베이스에 저장된 아이템정보 수정
+	 * @param cartItem 장바구니 아이템정보
+	 * @throws SQLException
+	 */
 	public void updateCartItem(CartItem cartItem) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(UPDATE_CARTITEM_SQL);
@@ -295,6 +342,11 @@ public class CartDao {
 		con.close();
 	}
 	
+	/**
+	 * 전달받은 장바구니 번호로 데이터베이스에 저장된 장바구니 정보 삭제
+	 * @param cartItemNo 장바구니 번호
+	 * @throws SQLException
+	 */
 	public void deleteCartItem(int cartItemNo) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(DELETE_CARTITEM_SQL);

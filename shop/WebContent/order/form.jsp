@@ -39,9 +39,9 @@
 	</div>
 	<%
 	 	int bookNo = StringUtils.stringToInt(request.getParameter("bookno"), 0);
-		int amount = StringUtils.stringToInt(request.getParameter("amount"));
+		int amount = StringUtils.stringToInt(request.getParameter("amount"), 0);
 		String[] cartNumbers = request.getParameterValues("cartno");
-	
+		
 		CartDao cartDao = CartDao.getInstance();
 		
 		// 주문할 책의 정보를 담는 List 객체(dto인 이유는 아래에서 책에 대한 정보를 보여줘야되기 때문)
@@ -50,14 +50,24 @@
 		// 장바구니에서 체크한 책들의 정보를 장바구니 테이블에 저장하고, cartItemDtos 리스트에 저장한다.
 		if (bookNo == 0) {
 			// 변경된 수량을 장바구니 테이블에 저장하는 실행문
-			List<CartItem> cartItems = cartDao.getCartItemsByUserNo(loginedUserNo);
-			
-			// 저기 넘겨주는 이름을 String로 해야됨. 그러면 그냥 list에서 넘겨줄때도 이름-카트번호로 하면될듯?
-			for (CartItem cartItem : cartItems) {
-				String name = "amount-" + cartItem.getNo();
-				cartItem.setAmount(StringUtils.stringToInt(request.getParameter(name)));
+			// bookNo가 0이고 amount도 0이면 장바구니에서 선택한 상품주문
+			// (수량변경 후 장바구니 테이블에 저장해주지 않았기 때문에 여기서 저장해준다.)
+			if(amount == 0) {
+				List<CartItem> cartItems = cartDao.getCartItemsByUserNo(loginedUserNo);
+				
+				for (CartItem cartItem : cartItems) {
+					String name = "amount-" + cartItem.getNo();
+					cartItem.setAmount(StringUtils.stringToInt(request.getParameter(name)));
+					cartDao.updateCartItem(cartItem);
+				} 				
+			} else {
+				// bookNo는 0인데 amount가 0이 아니면 장바구니에서 개별주문
+				// (수량변경 후 장바구니 테이블에 저장해주지 않았기 때문에 여기서 저장해준다.)
+				int cartNo = StringUtils.stringToInt(cartNumbers[0]);
+				CartItem cartItem = cartDao.getCartItemByNo(cartNo);
+				cartItem.setAmount(amount);
 				cartDao.updateCartItem(cartItem);
-			} 
+			}
 			
 			// 장바구니에서 체크한 책 번호들을 이용해서 장바구니 안에 있는 정보를 조회
 			// cartItemDtos 리스트에 저장
@@ -67,6 +77,8 @@
 				cartItemDtos.add(cartItemDto);
 			}
 		} else {
+			// product/detail.jsp에서 바로 구매 했을 경우
+			// cartItemDtos 리스트에 저장
 		 	CartItemDto cartItemDto = new CartItemDto();
 		 	cartItemDto.setAmount(amount);
 		 	

@@ -17,7 +17,7 @@ public class UserDao {
 	private static final String GET_USER_BY_USERNO_SQL = "select * from shop_users where user_no = ?";
 	private static final String GET_USER_BY_USERID_SQL = "select * from shop_users where user_id = ?";
 	private static final String GET_POINT_HISTORY_BY_ORDERNO_SQL = "select * from shop_user_point_history where order_no = ?";
-	private static final String GET_POINT_HISTORIES_BY_USER_NO_SQL = "select * from shop_user_point_history where user_no = ?";
+	private static final String GET_POINT_HISTORIES_BY_USER_NO_SQL = "select * from shop_user_point_history where user_no = ? order by history_no desc";
 	private static final String INSERT_USER_SQL = "insert into shop_users(user_no, user_id, user_password, user_name, user_tel, user_email)"
 												+ " values(shop_user_no_seq.nextval, ?, ?, ?, ?, ?)";
 	private static final String INSERT_POINT_HISTORY_SQL = "insert into shop_user_point_history(history_no, user_no, history_content, order_no, history_point_amount)"
@@ -32,6 +32,12 @@ public class UserDao {
 		return userDao;
 	}
 	
+	/**
+	 * 전달 받은 사용자 번호로 사용자 정보를 조회한다.
+	 * @param userNo 사용자번호
+	 * @return 사용자정보
+	 * @throws SQLException
+	 */
 	public User getUserByNo(int userNo) throws SQLException {
 		User user = null;
 		
@@ -60,6 +66,12 @@ public class UserDao {
 		return user;
 	}
 
+	/**
+	 * 전달받은 사용자 아이디로 사용자정보를 조회한다.
+	 * @param userId 사용자아이디
+	 * @return 사용자정보
+	 * @throws SQLException
+	 */
 	public User getUserById(String userId) throws SQLException {
 		User user = null;
 		
@@ -88,6 +100,12 @@ public class UserDao {
 		return user;
 	}
 	
+	/**
+	 * 전달받은 주문번호로 주문할 때 적립된 포인트 내역 정보를 조회한다.
+	 * @param orderNo 주문번호
+	 * @return 포인트 내역 정보
+	 * @throws SQLException
+	 */
 	public UserPointHistory getPointHistoryByOrderNo(int orderNo) throws SQLException {
 		UserPointHistory userPointHistory = null;
 		
@@ -112,6 +130,12 @@ public class UserDao {
 		return userPointHistory;
 	}
 	
+	/**
+	 * 전달받은 사용자번호로 포인트 내역을 조회한다.
+	 * @param userNo 사용자번호
+	 * @return 포인트 내역
+	 * @throws SQLException
+	 */
 	public List<UserPointHistory> getPointHistoriesByUserNo(int userNo) throws SQLException {
 		List<UserPointHistory> userPointHistories = new ArrayList<UserPointHistory>();
 		
@@ -137,6 +161,11 @@ public class UserDao {
 		return userPointHistories;
 	}
 	
+	/**
+	 * 전달받은 사용자 정보를 저장한다.
+	 * @param user 사용자 정보
+	 * @throws SQLException
+	 */
 	public void insertUser(User user) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(INSERT_USER_SQL);
@@ -151,6 +180,11 @@ public class UserDao {
 		con.close();
 	}
 	
+	/**
+	 * 전달받은 사용자 정보를 수정한다.
+	 * @param user 사용자정보
+	 * @throws SQLException
+	 */
 	public void updateUser(User user) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(UPDATE_USER_SQL);
@@ -167,6 +201,11 @@ public class UserDao {
 		con.close();
 	}
 	
+	/**
+	 *  전달받은 포인트 내역을 저장한다.
+	 * @param userPointHistory 포인트 내역
+	 * @throws SQLException
+	 */
 	public void insertPointHistory(UserPointHistory userPointHistory) throws SQLException {
 		Connection con = ConnectionUtil.getConnection();
 		PreparedStatement pstmt = con.prepareStatement(INSERT_POINT_HISTORY_SQL);

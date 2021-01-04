@@ -81,7 +81,7 @@
 									</td>
 									<td><strong id="cartItem-orderPrice-<%=cartItemDto.getNo() %>"><%=cartItemDto.getBook().getDiscountPrice() * cartItemDto.getAmount() %></strong><strong>원</strong></td>
 									<td>
-										<a href="../order/form.jsp?bookno=<%=cartItemDto.getBook().getNo() %>" class="btn btn-primary btn-xs">주문하기</a><br />
+										<a href="../order/form.jsp?cartno=<%=cartItemDto.getNo() %>&amount=<%=cartItemDto.getAmount() %>" class="btn btn-primary btn-xs" id="orderItem-<%=cartItemDto.getNo() %>">주문하기</a><br />
 										<a href="deleteItem.jsp?cartno=<%=cartItemDto.getNo() %>" class="btn btn-secondary btn-xs">삭제하기</a>
 									</td>
 								</tr>
@@ -143,7 +143,15 @@
 		document.querySelector("#cartItem-orderPrice-" + cartItemNo).textContent = orderPrice;
 		document.querySelector("#chkbox-" + cartItemNo).checked = true;
 		
+		updateHref(cartItemNo);
 		updateTotalOrderPrice();
+	}
+	
+	// 장바구니에 수량변경했을때 href 주소값의 amount요청파라미터값을 변경된 수량으로 수정
+	function updateHref(cartItemNo) {
+		var el = document.querySelector("#orderItem-" + cartItemNo);
+		var amount = document.querySelector("#cartItem-amount-" + cartItemNo).value;
+		el.setAttribute("href", "../order/form.jsp?cartno=" + cartItemNo + "&amount=" + amount);
 	}
 	
 	function updateTotalOrderPrice() {
