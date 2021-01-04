@@ -91,13 +91,13 @@
 			        					</tr>
 			        					<tr>
 			        						<th>정가</th>
-			        						<td><small><%=bookDto.getPrice() %> 원</small></td>
+			        						<td><small><%=df.format(bookDto.getPrice()) %> 원</small></td>
 			        						<th>상태</th>
 			        						<td><%=bookDto.getStatus() %></td>
 			        					</tr>
 			        					<tr>
 			        						<th>판매가</th>
-			        						<td><strong  class="text-danger"><%=bookDto.getDiscountPrice() %> 원</strong> <small>(<%=(int)(bookDto.getDiscountRate()*100) %>%할인)</small></td>
+			        						<td><strong  class="text-danger"><%=df.format(bookDto.getDiscountPrice()) %> 원</strong> <small>(<%=(int)(bookDto.getDiscountRate()*100) %>%할인)</small></td>
 			        						<th>포인트</th>
 			        						<td><span class="text-danger"><%=bookDto.getPoint() %>원</span> 적립</td>
 			        					</tr>

@@ -38,7 +38,7 @@
   		<div class="col-12">
 			<div class="alert alert-info text-center" style="font-size: 27px;">
 				<span><strong><%=loginedUserName %></strong>님의 포인트 내역입니다..</span><br />
-				<span class="mt-2 small">현재 포인트 적립액 : <%=user.getPoint() %>원</span>
+				<span class="mt-2 small">현재 포인트 적립액 : <%=df.format(user.getPoint()) %>원</span>
 			</div>
 		</div>
   	</div>
@@ -72,7 +72,7 @@
 								<td><%=userPointHistory.getCreatedDate() %></td>
 								<td><%=userPointHistory.getContent() %></td>
 								<td><%=userPointHistory.getOrderNo() == 0 ? "" : userPointHistory.getOrderNo() %></td>
-								<td class="text-right pr-5"><strong class="text-warning"><%=userPointHistory.getAmount() %></strong> 원</td>
+								<td class="text-right pr-5"><strong class="text-warning"><%=df.format(userPointHistory.getAmount()) %></strong> 원</td>
 							</tr>
 						<%
 							}

@@ -49,7 +49,7 @@
 		<div class="col-12">
 			<div class="alert alert-success text-center" style="font-size: 27px;">
 				<span><strong><%=loginedUserName %></strong>님 주문이 완료되었습니다.</span><br />
-				<span class="mt-2 small">주문번호 : <%=orderNo %> 포인트 적립액 : <%=userPointHistory.getAmount() %>원</span>
+				<span class="mt-2 small">주문번호 : <%=orderNo %> 포인트 적립액 : <%=df.format(userPointHistory.getAmount()) %>원</span>
 			</div>
 		</div>
 		<div class="col-12">
@@ -82,13 +82,13 @@
 									<img src="../resources/images/<%=orderItemDto.getBook().getFileName() %>.jpg" width="60px" height="88px" />
 									<span class="align-top"><a href="detail.jsp?orderNo=<%=orderNo %>" class="text-body"><%=orderItemDto.getBook().getTitle() %></a></span>
 								</td>
-								<td><%=orderItemDto.getBook().getPrice() %>원</td>
+								<td><%=df.format(orderItemDto.getBook().getPrice()) %>원</td>
 								<td>
-									<%=orderItemDto.getBook().getDiscountPrice() %>원<br/>
-									<small>(<%=orderItemDto.getBook().getPoint() %>원 적립)</small>
+									<%=df.format(orderItemDto.getBook().getDiscountPrice()) %>원<br/>
+									<small>(<%=df.format(orderItemDto.getBook().getPoint()) %>원 적립)</small>
 								</td>
 								<td><%=orderItemDto.getAmount() %></td>
-								<td><strong><%=orderItemDto.getAmount() * orderItemDto.getPrice() %>원</strong></td>
+								<td><strong><%=df.format(orderItemDto.getAmount() * orderItemDto.getPrice()) %>원</strong></td>
 							</tr>
 							<tr>
 						<%
@@ -99,9 +99,9 @@
 				</div>
 				<div class="card-footer text-right">
 					<span>
-					상품 총 금액 : <strong class="mr-5"><%=order.getTotalOrderPrice() %>원</strong> 
-					포인트 사용액 : <strong class="mr-5"><%=order.getUsedPoint() %>원</strong>
-					총 결재 금액 : <strong class="mr-5 text-danger"><%=order.getTotalPaymentPrice() %>원</strong> 
+					상품 총 금액 : <strong class="mr-5"><%=df.format(order.getTotalOrderPrice()) %>원</strong> 
+					포인트 사용액 : <strong class="mr-5"><%=df.format(order.getUsedPoint()) %>원</strong>
+					총 결재 금액 : <strong class="mr-5 text-danger"><%=df.format(order.getTotalPaymentPrice()) %>원</strong> 
 					</span>
 				</div>	
 			</div>

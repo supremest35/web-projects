@@ -100,7 +100,7 @@
  								<th>이름</th>
  								<td><%=loginedUserName %></td>
  								<th>적립 포인트</th>
- 								<td><span class="mr-5"><strong class="text-danger"><%=user.getPoint() %></strong> 원</span> <a href="pointhistory.jsp" class="btn btn-primary btn-xs">상세내용</a></td>
+ 								<td><span class="mr-5"><strong class="text-danger"><%=df.format(user.getPoint()) %></strong> 원</span> <a href="pointhistory.jsp" class="btn btn-primary btn-xs">상세내용</a></td>
  							</tr>
  							<tr>
  								<th>아이디</th>
@@ -141,7 +141,7 @@
 								<td><a href="../order/detail.jsp?orderno=<%=order.getNo() %>"><%=order.getNo() %></a></td>
 								<td><%=order.getCreatedDate() %></td>
 								<td><a href="../order/detail.jsp?orderno=<%=order.getNo() %>"><%=orderItemDtos.get(0).getBook().getTitle() %> 외 <%=order.getAmount() - 1 %>종</a></td>
-								<td><%=order.getTotalOrderPrice() %>원/<%=order.getAmount() %></td>
+								<td><%=df.format(order.getTotalOrderPrice()) %>원/<%=order.getAmount() %></td>
 								<td><span class="text-success"><%=order.getStatus() %></span></td>
 								<td><%=loginedUserName %></td>
 								<td><%=order.getRecName() %></td>

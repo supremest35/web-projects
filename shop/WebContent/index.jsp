@@ -48,7 +48,7 @@
 	   									<small class="text-secondary"><%=book.getPublisher() %></small>
 	   								</div>
 	   								<div class="d-flex justify-content-between">
-	   									<small><strong class="text-danger"><%=book.getDiscountPrice() %></strong> 원 (<%=(int)(book.getDiscountRate() * 100) %>% 할인)</small> 
+	   									<small><strong class="text-danger"><%=df.format(book.getDiscountPrice()) %></strong> 원 (<%=(int)(book.getDiscountRate() * 100) %>% 할인)</small> 
 	   									<small><%=book.getPoint() %>원 적립</small>
 	   								</div>
 	   								<div class="mt-3">
@@ -120,7 +120,7 @@
 	   									<small class="text-secondary"><%=book.getPublisher() %></small>
 	   								</div>
 	   								<div class="d-flex justify-content-between">
-	   									<small><strong class="text-danger"><%=book.getDiscountPrice() %></strong> 원 (<%=(int)(book.getDiscountRate() * 100) %>% 할인)</small> 
+	   									<small><strong class="text-danger"><%=df.format(book.getDiscountPrice()) %></strong> 원 (<%=(int)(book.getDiscountRate() * 100) %>% 할인)</small> 
 	   									<small><%=book.getPoint() %>원 적립</small>
 	   								</div>
 	   								<div class="mt-3">

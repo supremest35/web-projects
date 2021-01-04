@@ -51,11 +51,11 @@
 					<div class="card-body">
 						<div class="form-group">
 							<label>아이디</label>
-							<input type="text" class="form-control" name="id" />
+							<input type="text" class="form-control" name="id" required />
 						</div>
 						<div class="form-group">
 							<label>비밀번호</label>
-							<input type="password" class="form-control" name="password" />
+							<input type="password" class="form-control" name="password" required />
 						</div>
 						<div class="text-right">
 							<a href="/blog/index.jsp" class="btn btn-secondary">취소</a>

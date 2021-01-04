@@ -80,11 +80,11 @@
 								<th>주소</th><td colspan="3"> (<%=order.getRecZipCode() %>) <%=order.getRecAddress() %></td>
 							</tr>
 							<tr>
-								<th>총 주문 금액</th><td colspan="3"><strong><%=order.getTotalOrderPrice() %></strong>원</td>
+								<th>총 주문 금액</th><td colspan="3"><strong><%=df.format(order.getTotalOrderPrice()) %></strong>원</td>
 							</tr>
 							<tr>
-								<th>결재금액</th><td><strong class="text-danger"><%=order.getTotalPaymentPrice() %></strong>원 (포인트: <span class="text-primary"><%=order.getUsedPoint() %></span>원 사용)</td>
-								<th>포인트 적립액</th><td><strong class="text-danger"><%=userPointHistory.getAmount() %></strong>원</td>
+								<th>결재금액</th><td><strong class="text-danger"><%=df.format(order.getTotalPaymentPrice()) %></strong>원 (포인트: <span class="text-primary"><%=df.format(order.getUsedPoint()) %></span>원 사용)</td>
+								<th>포인트 적립액</th><td><strong class="text-danger"><%=df.format(userPointHistory.getAmount()) %></strong>원</td>
 							</tr>
 							<tr>
 								<th>결재내용</th><td>카드결재 </td>
@@ -120,13 +120,13 @@
 									<img src="../resources/images/<%=orderItemDto.getBook().getFileName() %>.jpg" width="60px" height="88px" />
 									<span class="align-top"><a href="../product/detail.jsp?bookno=<%=orderItemDto.getBook().getNo() %>" class="text-body"><%=orderItemDto.getBook().getTitle() %></a></span>
 								</td>
-								<td><%=orderItemDto.getBook().getPrice() %>원</td>
+								<td><%=df.format(orderItemDto.getBook().getPrice()) %>원</td>
 								<td>
-									<%=orderItemDto.getBook().getDiscountPrice() %>원<br/>
-									<small>(<%=orderItemDto.getBook().getPoint() %>원 적립)</small>
+									<%=df.format(orderItemDto.getBook().getDiscountPrice()) %>원<br/>
+									<small>(<%=df.format(orderItemDto.getBook().getPoint()) %>원 적립)</small>
 								</td>
 								<td><%=orderItemDto.getAmount() %></td>
-								<td><strong><%=orderItemDto.getPrice() %>원</strong></td>
+								<td><strong><%=df.format(orderItemDto.getPrice()) %>원</strong></td>
 							</tr>
 						<%
 							}

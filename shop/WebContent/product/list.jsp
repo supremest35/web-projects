@@ -62,7 +62,7 @@
 	   									<small class="text-secondary"><%=bookDto.getPublisher() %></small>
 	   								</div>
 	   								<div class="d-flex justify-content-between">
-	   									<small><strong class="text-danger"><%=bookDto.getDiscountPrice() %></strong> 원 (<%=(int)(bookDto.getDiscountRate() * 100) %>% 할인)</small> 
+	   									<small><strong class="text-danger"><%=df.format(bookDto.getDiscountPrice()) %></strong> 원 (<%=(int)(bookDto.getDiscountRate() * 100) %>% 할인)</small> 
 	   									<small><%=bookDto.getPoint() %>원 적립</small>
 	   								</div>
 	   								<div class="mt-3">

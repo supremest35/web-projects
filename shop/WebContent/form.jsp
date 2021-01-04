@@ -54,27 +54,27 @@
 				<div class="card-body">
 					<div class="form-group">
 						<label>이름</label>
-						<input type="text" class="form-control" name="name" />
+						<input type="text" class="form-control" name="name" required />
 					</div>
 					<div class="form-group">
 						<label>아이디</label>
-						<input type="text" class="form-control" name="id" />
+						<input type="text" class="form-control" name="id" required/>
 					</div>
 					<div class="form-group">
 						<label>비밀번호</label>
-						<input type="password" class="form-control" name="password" />
+						<input type="password" class="form-control" name="password" required/>
 					</div>
 					<div class="form-group">
 						<label>비밀번호 확인</label>
-						<input type="password" class="form-control" name="password2" />
+						<input type="password" class="form-control" name="password2" required/>
 					</div>
 					<div class="form-group">
 						<label>전화번호</label>
-						<input type="text" class="form-control" name="tel" />
+						<input type="text" class="form-control" name="tel" required/>
 					</div>
 					<div class="form-group">
 						<label>이메일</label>
-						<input type="text" class="form-control" name="email" />
+						<input type="text" class="form-control" name="email" required/>
 					</div>
 					<div class="text-right">
 						<a href="/" class="btn btn-secondary">취소</a>

@@ -166,21 +166,21 @@
 						<div class="form-row">
 							<div class="form-group col-3">
 								<label>받는사람 이름</label>
-      							<input type="text" class="form-control" name="name">
+      							<input type="text" class="form-control" name="name" required />
 							</div>
 							<div class="form-group col-3">
 								<label>받는사람 연락처</label>
-      							<input type="text" class="form-control" name="tel">
+      							<input type="text" class="form-control" name="tel" required />
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="form-group col-3">
 								<label>우편번호</label>
-      							<input type="text" class="form-control" name="zipcode">
+      							<input type="text" class="form-control" name="zipcode" required />
 							</div>
 							<div class="form-group col-9">
 								<label>주소</label>
-      							<input type="text" class="form-control" name="address">
+      							<input type="text" class="form-control" name="address" required />
 							</div>
 						</div>
 						<div class="form-row">
@@ -242,7 +242,7 @@
 							</div>
 							<div class="form-group col-6">
 								<label>카드번호 및 계좌번호</label>
-      							<input type="text" class="form-control" name="account">
+      							<input type="text" class="form-control" name="account" required />
 							</div>
 						</div>
 						<div class="text-right">

@@ -1,9 +1,11 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="kr.co.shop.util.StringUtils"%>
 <%@ page pageEncoding="UTF-8"%>
 <%
 	Integer loginedUserNo = (Integer) session.getAttribute("LOGINED_USER_NO");
 	String loginedUserId = (String) session.getAttribute("LOGINED_USER_ID");
 	String loginedUserName = (String) session.getAttribute("LOGINED_USER_NAME");
+	DecimalFormat df = new DecimalFormat("##,###");
 %>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark mb-3">
 	<a href="/shop/index.jsp" class="navbar-brand">쇼핑몰</a>

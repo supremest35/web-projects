@@ -62,7 +62,7 @@
 								<td><a href="detail.jsp?orderno=<%=order.getNo() %>"><%=order.getNo() %></a></td>
 								<td><%=order.getCreatedDate() %></td>
 								<td><a href="detail.jsp?orderno=<%=order.getNo() %>"><%=orderItemDtos.get(0).getBook().getTitle() %> 외 <%=order.getAmount() - 1 %>종</a></td>
-								<td><%=order.getTotalOrderPrice() %>원/<%=order.getAmount() %></td>
+								<td><%=df.format(order.getTotalOrderPrice()) %>원/<%=order.getAmount() %></td>
 								<td><span class="text-success"><%=order.getStatus() %></span></td>
 								<td><%=loginedUserName %></td>
 								<td><%=order.getRecName() %></td>
